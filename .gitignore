@@ -41,3 +41,10 @@ output/*/index.html
 
 # Sphinx
 docs/_build
+
+# Mac OS X stuff...
+.DS_Store
+
+# Vim swap files
+*.swp
+*.swo
