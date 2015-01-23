@@ -22,7 +22,7 @@ test_requirements = [
 setup(
     name='clustercron',
     version='0.1.0',
-    description='Cron job wrapper that ensures a script gets run from one node in the cluster.'
+    description='Cron job wrapper that ensures a script gets run from one node in the cluster.',
     long_description=readme + '\n\n' + history,
     author='Maarten Diemel',
     author_email='maarten@maartendiemel.nl',
