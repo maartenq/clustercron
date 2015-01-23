@@ -1,6 +1,6 @@
-===============================
+===========
 clustercron
-===============================
+===========
 
 .. image:: https://badge.fury.io/py/clustercron.png
     :target: http://badge.fury.io/py/clustercron
@@ -11,8 +11,8 @@ clustercron
 .. image:: https://pypip.in/d/clustercron/badge.png
         :target: https://pypi.python.org/pypi/clustercron
 
+Cron job wrapper that ensures a script gets run from one node in the cluster.
 
-ClusterCron wraps arbitrary commands to ensure that th
 
 * Free software: BSD license
 * Documentation: https://clustercron.readthedocs.org.
