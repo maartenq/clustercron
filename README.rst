@@ -14,7 +14,7 @@ clustercron
 Cron job wrapper that ensures a script gets run from one node in the cluster.
 
 
-* Documentation: https://clustercron.readthedocs.org.
+* Documentation: https://clustercron.readthedocs.org/en/latest/
 * GitHub: https://github.com/maartenq/clustercron
 * PyPi: https://pypi.python.org/pypi/clustercron
 * Free software: BSD license
