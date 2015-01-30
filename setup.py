@@ -32,6 +32,11 @@ setup(
     ],
     package_dir={'clustercron':
                  'clustercron'},
+    entry_points={
+        'console_scripts': [
+            'clustercron = clustercron.clustercron:main',
+        ]
+    },
     include_package_data=True,
     install_requires=requirements,
     license="BSD",
