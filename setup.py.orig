@@ -3,6 +3,8 @@
 
 import sys
 from setuptools import setup
+<<<<<<< HEAD
+=======
 from setuptools.command.test import test as TestCommand
 
 
@@ -24,6 +26,7 @@ class PyTest(TestCommand):
         errno = pytest.main(self.pytest_args)
         sys.exit(errno)
 
+>>>>>>> master
 
 readme = open('README.rst').read()
 history = open('HISTORY.rst').read().replace('.. :changelog:', '')
@@ -34,9 +37,12 @@ test_requirements = [
     'pytest',
 ]
 
+<<<<<<< HEAD
 # Add Python 2.6-specific dependencies
 if sys.version_info[:2] < (2, 7):
     requirements.append('argparse')
+=======
+>>>>>>> master
 
 setup(
     name='clustercron',
