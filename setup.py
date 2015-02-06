@@ -39,9 +39,14 @@ test_requirements = [
 
 setup(
     name='clustercron',
+<<<<<<< HEAD
     version='0.1.0',
     description='Cron job wrapper that ensures a script gets run from one '
             'node in the cluster.',
+=======
+    version='0.1.1',
+    description='Cron job wrapper that ensures a script gets run from one node in the cluster.',
+>>>>>>> origin/master
     long_description=readme + '\n\n' + history,
     author='Maarten Diemel',
     author_email='maarten@maartendiemel.nl',
@@ -51,6 +56,11 @@ setup(
     ],
     package_dir={'clustercron':
                  'clustercron'},
+    entry_points={
+        'console_scripts': [
+            'clustercron = clustercron.clustercron:main',
+        ]
+    },
     include_package_data=True,
     install_requires=requirements,
     license="BSD",
