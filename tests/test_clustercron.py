@@ -4,15 +4,46 @@ Tests for `clustercron` module.
 
 import pytest
 from clustercron import clustercron
+from argparse import Namespace
 
 
 def test_parse_clustercron_args_no_args():
     '''
+    Test no command-line arguments to clustercron`.
+    '''
+    with pytest.raises(SystemExit) as excinfo:
+        clustercron.parse_clustercron_args([])
+    assert str(excinfo.value) == '2'
+
+
+def test_parse_clustercron_args_elb():
+    '''
+    Test no command-line arguments to `clustercron elb`.
+    '''
+    with pytest.raises(SystemExit) as excinfo:
+        clustercron.parse_clustercron_args(['elb'])
+    assert str(excinfo.value) == '2'
+
+
+def test_parse_clustercron_args_elb_some_command():
+    '''
     Test the long command-line arguments to clustercron.
     '''
-    with pytest.raises(SystemExit):
-        args = clustercron.parse_clustercron_args([])
-        assert vars(args) == {'verbose': False}
+    args = clustercron.parse_clustercron_args(
+        [
+            'elb',
+            '/usr/local/bin/somecommand',
+            'b',
+        ]
+    )
+    assert args == Namespace(
+        cluster_type='elb',
+        command=[
+            '/usr/local/bin/somecommand',
+            'b',
+        ],
+        verbose=False
+    )
 
 
 #def test_parse_clustercron_args_deprovision():

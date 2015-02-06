@@ -7,7 +7,6 @@ Cluster Cron
 ============
 '''
 
-import argparse
 import logging
 import sys
 
@@ -28,44 +27,28 @@ class Clustercron(object):
     def __init__(self, args):
         self.args = args
         self.exitcode = 0
+        print(self.args)
         # Run sub command in scope
-        # getattr(self, self.args.scope)()
+        # getattr(self, self.args.cluster_type)()
+
+    def run_command(self):
+        pass
 
 
-def parse_clustercron_args(args):
+def parse_clustercron_args(arg_list):
     '''
     Parse the command-line arguments to clustercron
     '''
-    # Create top-level parser
-    parser = argparse.ArgumentParser(
-        prog='clustercron',
-        description='Cron job wrapper that ensures a script gets run from one '
-        'node in the cluster.',
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter
-    )
-    # Add options to top-level parser
-    parser.add_argument(
-        '-v',
-        '--verbose',
-        action='store_true',
-        help='Show verbose info (level DEBUG).',
-    )
-    # Create sub parsers
-    parser_cluster_type = parser.add_subparsers(
-        help='Cluster type',
-        dest='cluster_type',
-    )
-    # Add 'elb cluster type'
-    parser_cluster_type_ELB = parser_cluster_type.add_parser(
-        'ELB',
-        help='Scope AWS Elastic Load Balance',
-    )
-    # Add command argument to 'ielb cluster type'
-    parser_cluster_type_ELB.add_argument(
-        'command',
-        help='Cron job command'
-    )
-    return parser.parse_args(args)
+    args = {
+        'verbose': False,
+        'help': False,
+    }
+    usage = 'usage:\tclustercron [-v] elb <cron command>'
+    '\tclustercron (-h | --help | --version)\n'
+    '\tCron job wrapper that ensures a script gets run from one node in '
+    '\tthe cluster.'
+    print(usage)
+    return args
 
 
 def setup_logging(verbose):
@@ -94,7 +77,7 @@ def main():
     # Parse args
     args = parse_clustercron_args(sys.argv[1:])
     # Logging
-    setup_logging(args.verbose)
+    setup_logging(args['verbose'])
     # Args
     logger.debug('Command line arguments: %s', args)
     sys.exit(Clustercron(args).exitcode)

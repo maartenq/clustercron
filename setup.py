@@ -1,28 +1,27 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
-
+import sys
+from setuptools import setup
 
 readme = open('README.rst').read()
 history = open('HISTORY.rst').read().replace('.. :changelog:', '')
 
-requirements = [
-    # TODO: put package requirements here
-]
+requirements = []
 
 test_requirements = [
     'pytest',
 ]
 
+# Add Python 2.6-specific dependencies
+if sys.version_info[:2] < (2, 7):
+    requirements.append('argparse')
+
 setup(
     name='clustercron',
     version='0.1.1',
-    description='Cron job wrapper that ensures a script gets run from one node in the cluster.',
+    description='Cron job wrapper that ensures a script gets run from one node'
+    ' in the cluster.',
     long_description=readme + '\n\n' + history,
     author='Maarten Diemel',
     author_email='maarten@maartendiemel.nl',
