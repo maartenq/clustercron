@@ -43,7 +43,7 @@ def parse_clustercron_args(arg_list):
         'verbose': False,
         'help': False,
     }
-    usage = 'usage:\tclustercron [-v] elb <cron command>'
+    usage = 'usage:\tclustercron [-v|-s|-n] elb <lb_name> <cron command>'
     '\tclustercron (-h | --help | --version)\n'
     '\tCron job wrapper that ensures a script gets run from one node in '
     '\tthe cluster.'
