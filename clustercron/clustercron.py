@@ -33,6 +33,7 @@ class Clustercron(object):
     def run_command(self):
         pass
 
+
 class OptArgParser(object):
     '''
     Parse command arguments
@@ -41,8 +42,6 @@ class OptArgParser(object):
     '''
     def __init__(self, arg_list):
         self.arg_list = arg_list
-        # Defaults
-        self.message = ''
         # Set exitcode 3 for invalid arguments
         self.exitcode = 3
         self.args = {
