@@ -50,43 +50,45 @@ class OptArgParser(object):
             'verbose': False,
             'dry_run': False,
             'lb_type': None,
-            'lb_instance': None,
+            'lb_name': None,
             'command': [],
         }
 
     @property
     def usage(self):
-        res = 'usage: clustercron [options] elb <instance_name>' \
+        res = 'usage:  clustercron [options] elb <loadbalancer_name>' \
             ' <cron_command>\n' \
-            '       clustercron [options] haproxy <instance_name>' \
+            '        clustercron [options] haproxy <loadbalancer_name>' \
             ' <cron_command>\n\n' \
-            '-v     verbose\n' \
-            '-n     dry-run\n\n' \
-            '       clustercron --version\n' \
-            '       clustercron (-h | --help)\n'
+            '-n      Dry-run, do not run <cron_command>\n' \
+            '        shows where <cron_command> would have ran.\n' \
+            '-v      Verbose output.\n\n' \
+            '        clustercron --version\n' \
+            '        clustercron (-h | --help)\n'
         return res
 
     def parse(self):
         lb_type_index = 0
-        if '-h' in self.arg_list or '--help' in self.arg_list:
-            self.args['help'] = True
-            self.exitcode = 0
-        if '--version' in self.arg_list:
-            self.args['version'] = True
-            self.exitcode = 0
-        if '-v' in self.arg_list[:2]:
-            self.args['verbose'] = True
-            lb_type_index += 1
-        if '-n' in self.arg_list[:2]:
-            self.args['dry_run'] = True
-            lb_type_index += 1
-        if len(self.arg_list) > lb_type_index + 3:
-            if self.arg_list[lb_type_index] == 'elb' or \
-                    self.arg_list[lb_type_index] == 'haproxy':
+        if self.arg_list:
+            if self.arg_list[0] == '-h' or self.arg_list[0] == '--help':
+                self.args['help'] = True
+                self.exitcode = 0
+            if self.arg_list[0] == '--version':
+                self.args['version'] = True
+                self.exitcode = 0
+            if '-v' in self.arg_list[:2]:
+                self.args['verbose'] = True
+                lb_type_index += 1
+            if '-n' in self.arg_list[:2]:
+                self.args['dry_run'] = True
+                lb_type_index += 1
+            if len(self.arg_list) > lb_type_index + 3 and \
+                    (self.arg_list[lb_type_index] == 'elb' or
+                     self.arg_list[lb_type_index] == 'haproxy'):
                 self.args['lb_type'] = self.arg_list[lb_type_index]
-                self.args['lb_instance'] = self.arg_list[lb_type_index + 1]
+                self.args['lb_name'] = self.arg_list[lb_type_index + 1]
                 self.args['command'] = self.arg_list[lb_type_index + 2:]
-            self.exitcode = 0
+                self.exitcode = 0
 
 
 def setup_logging(verbose):

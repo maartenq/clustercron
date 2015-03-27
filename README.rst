@@ -22,6 +22,6 @@ Cron job wrapper that ensures a script gets run from one node in the cluster.
 Features
 --------
 
-This project is yet in Pre-Alpha status.
+This project is in Pre-Alpha status.
 
 * TODO
