@@ -3,8 +3,7 @@
 # vim: ts=4 et sw=4 sts=4 ft=python fenc=UTF-8 ai
 
 '''
-Cluster Cron
-============
+Cluster Cron ============
 '''
 
 import logging
@@ -34,21 +33,61 @@ class Clustercron(object):
     def run_command(self):
         pass
 
+class OptArgParser(object):
+    '''
+    Parse command arguments
+    Set properties from arguments.
+    Runs sub commands in scopes.
+    '''
+    def __init__(self, arg_list):
+        self.arg_list = arg_list
+        # Defaults
+        self.message = ''
+        # Set exitcode 3 for invalid arguments
+        self.exitcode = 3
+        self.args = {
+            'version': False,
+            'help': False,
+            'verbose': False,
+            'dry_run': False,
+            'lb_type': None,
+            'lb_instance': None,
+            'command': [],
+        }
 
-def parse_clustercron_args(arg_list):
-    '''
-    Parse the command-line arguments to clustercron
-    '''
-    args = {
-        'verbose': False,
-        'help': False,
-    }
-    usage = 'usage:\tclustercron [-v|-s|-n] elb <lb_name> <cron command>'
-    '\tclustercron (-h | --help | --version)\n'
-    '\tCron job wrapper that ensures a script gets run from one node in '
-    '\tthe cluster.'
-    print(usage)
-    return args
+    @property
+    def usage(self):
+        res = 'usage: clustercron [options] elb <instance_name>' \
+            ' <cron_command>\n' \
+            '       clustercron [options] haproxy <instance_name>' \
+            ' <cron_command>\n\n' \
+            '-v     verbose\n' \
+            '-n     dry-run\n\n' \
+            '       clustercron --version\n' \
+            '       clustercron (-h | --help)\n'
+        return res
+
+    def parse(self):
+        lb_type_index = 0
+        if '-h' in self.arg_list or '--help' in self.arg_list:
+            self.args['help'] = True
+            self.exitcode = 0
+        if '--version' in self.arg_list:
+            self.args['version'] = True
+            self.exitcode = 0
+        if '-v' in self.arg_list[:2]:
+            self.args['verbose'] = True
+            lb_type_index += 1
+        if '-n' in self.arg_list[:2]:
+            self.args['dry_run'] = True
+            lb_type_index += 1
+        if len(self.arg_list) > lb_type_index + 3:
+            if self.arg_list[lb_type_index] == 'elb' or \
+                    self.arg_list[lb_type_index] == 'haproxy':
+                self.args['lb_type'] = self.arg_list[lb_type_index]
+                self.args['lb_instance'] = self.arg_list[lb_type_index + 1]
+                self.args['command'] = self.arg_list[lb_type_index + 2:]
+            self.exitcode = 0
 
 
 def setup_logging(verbose):
@@ -75,12 +114,16 @@ def main():
     Entry point for the package, as defined in setup.py.
     '''
     # Parse args
-    args = parse_clustercron_args(sys.argv[1:])
+    opt_arg_parser = OptArgParser(sys.argv[1:])
+    opt_arg_parser.parse()
+    if opt_arg_parser.exitcode != 0:
+        print(opt_arg_parser.usage)
+        sys.exit(opt_arg_parser.exitcode)
     # Logging
-    setup_logging(args['verbose'])
+    setup_logging(opt_arg_parser.args['verbose'])
     # Args
-    logger.debug('Command line arguments: %s', args)
-    sys.exit(Clustercron(args).exitcode)
+    logger.debug('Command line arguments: %s', opt_arg_parser.args)
+    sys.exit(Clustercron(opt_arg_parser.args).exitcode)
 
 
 if __name__ == '__main__':
