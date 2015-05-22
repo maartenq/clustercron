@@ -34,7 +34,7 @@ class Clustercron(object):
         pass
 
 
-class OptArgParser(object):
+class Optarg(object):
     '''
     Parse command arguments
     Set properties from arguments.
@@ -53,42 +53,43 @@ class OptArgParser(object):
             'lb_name': None,
             'command': [],
         }
-
-    @property
-    def usage(self):
-        res = 'usage:  clustercron [options] elb <loadbalancer_name>' \
+        self.usage = \
+            'usage:  clustercron [options] elb <loadbalancer_name>' \
             ' <cron_command>\n' \
             '        clustercron [options] haproxy <loadbalancer_name>' \
             ' <cron_command>\n\n' \
-            '-n      Dry-run, do not run <cron_command>\n' \
-            '        shows where <cron_command> would have ran.\n' \
-            '-v      Verbose output.\n\n' \
+            'Options:\n' \
+            '(-n|--dry-run)   Dry-run, do not run <cron_command>\n' \
+            '                 shows where <cron_command> would have ran.\n' \
+            '(-v|--verbose)   Verbose output.\n\n' \
             '        clustercron --version\n' \
-            '        clustercron (-h | --help)\n'
-        return res
+            '        clustercron (-h|--help)\n'
 
     def parse(self):
-        lb_type_index = 0
-        if self.arg_list:
-            if self.arg_list[0] == '-h' or self.arg_list[0] == '--help':
+        arg_list = list(self.arg_list)
+        arg_list.reverse()
+        while arg_list:
+            arg = arg_list.pop()
+            if arg == '-h' or arg == '--help':
                 self.args['help'] = True
-                self.exitcode = 0
-            if self.arg_list[0] == '--version':
+                break
+            if arg == '--version':
                 self.args['version'] = True
-                self.exitcode = 0
-            if '-v' in self.arg_list[:2]:
+                break
+            elif arg == '-v' or arg == '--verbose':
                 self.args['verbose'] = True
-                lb_type_index += 1
-            if '-n' in self.arg_list[:2]:
+            elif arg == '-n' or arg == '--dry-run':
                 self.args['dry_run'] = True
-                lb_type_index += 1
-            if len(self.arg_list) > lb_type_index + 3 and \
-                    (self.arg_list[lb_type_index] == 'elb' or
-                     self.arg_list[lb_type_index] == 'haproxy'):
-                self.args['lb_type'] = self.arg_list[lb_type_index]
-                self.args['lb_name'] = self.arg_list[lb_type_index + 1]
-                self.args['command'] = self.arg_list[lb_type_index + 2:]
-                self.exitcode = 0
+            elif arg in ['haproxy', 'elb']:
+                self.args['lb_type'] = arg
+                self.args['lb_name'] = arg_list.pop()
+                arg_list.reverse()
+                self.args['command'] = list(arg_list)
+                break
+        if self.args['lb_name'] and self.args['lb_name'].startswith('-'):
+            self.args['lb_name'] = None
+        if self.args['command'] and self.args['command'][0].startswith('-'):
+            self.args['command'] = []
 
 
 def setup_logging(verbose):
@@ -110,21 +111,31 @@ def setup_logging(verbose):
     root_logger.addHandler(handler_console)
 
 
+def version():
+    return '0.2.0'
+
+
 def main():
     '''
     Entry point for the package, as defined in setup.py.
     '''
     # Parse args
-    opt_arg_parser = OptArgParser(sys.argv[1:])
-    opt_arg_parser.parse()
-    if opt_arg_parser.exitcode != 0:
-        print(opt_arg_parser.usage)
-        sys.exit(opt_arg_parser.exitcode)
-    # Logging
-    setup_logging(opt_arg_parser.args['verbose'])
-    # Args
-    logger.debug('Command line arguments: %s', opt_arg_parser.args)
-    sys.exit(Clustercron(opt_arg_parser.args).exitcode)
+    optarg = Optarg(sys.argv[1:])
+    optarg.parse()
+    if optarg.args['version']:
+        print(version())
+        exitcode = 1
+    elif optarg.args['lb_type'] and optarg.args['lb_name'] and \
+            optarg.args['command']:
+        # Logging
+        setup_logging(optarg.args['verbose'])
+        # Args
+        logger.debug('Command line arguments: %s', optarg.args)
+        exitcode = Clustercron(optarg.args).exitcode
+    else:
+        print(optarg.usage)
+        exitcode = 1
+    sys.exit(exitcode)
 
 
 if __name__ == '__main__':
