@@ -1,12 +1,11 @@
+Clustercron
 ===========
-clustercron
-===========
-
-.. image:: https://readthedocs.org/projects/clustercron/badge/?version=latest
-        :target: https://readthedocs.org/projects/clustercron/?badge=latest
 
 .. image:: https://badge.fury.io/py/clustercron.png
         :target: http://badge.fury.io/py/clustercron
+
+.. image:: https://readthedocs.org/projects/clustercron/badge/?version=latest
+        :target: https://readthedocs.org/projects/clustercron/?badge=latest
 
 .. image:: https://travis-ci.org/maartenq/clustercron.png?branch=master
         :target: https://travis-ci.org/maartenq/clustercron
@@ -15,14 +14,15 @@ clustercron
 Cron job wrapper that ensures a script gets run from one node in the cluster.
 
 
-* Documentation: https://clustercron.readthedocs.org/en/latest/
-* GitHub: https://github.com/maartenq/clustercron
 * PyPi: https://pypi.python.org/pypi/clustercron
+* GitHub: https://github.com/maartenq/clustercron
+* Documentation: https://clustercron.readthedocs.org/en/latest/
+* Travis CI: https://travis-ci.org/maartenq/clustercron
 * Free software: BSD license
+
 
 Features
 --------
 
 This project is in Pre-Alpha status.
 
-* TODO
