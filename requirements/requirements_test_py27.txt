@@ -1,1 +1,1 @@
-# Requirements for testing pcrunner on Python 2.7.
+# Requirements for testing clustercron on Python 2.7.
