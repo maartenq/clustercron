@@ -11,6 +11,10 @@ clustercron
 .. image:: https://pypip.in/d/clustercron/badge.png
         :target: https://pypi.python.org/pypi/clustercron
 
+.. image:: https://readthedocs.org/projects/clustercron/badge/?version=latest
+        :target: https://readthedocs.org/projects/clustercron/?badge=latest
+        :alt: Documentation Status
+
 Cron job wrapper that ensures a script gets run from one node in the cluster.
 
 
