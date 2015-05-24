@@ -55,8 +55,8 @@ docs:
 	open docs/_build/html/index.html
 
 release: clean
-	python setup.py sdist upload -r pypi
-	python setup.py bdist_wheel upload -r pypi
+	python setup.py sdist bdist_wheel
+	twine upload dist/*
 
 dist: clean
 	python setup.py sdist
