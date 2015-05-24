@@ -13,7 +13,7 @@ help:
 	@echo "release - package and upload a release"
 	@echo "dist - package"
 
-clean: clean-build clean-pyc clean-test
+clean: clean-build clean-pyc clean-test clean-docs
 
 clean-build:
 	rm -fr build/
@@ -30,6 +30,9 @@ clean-test:
 	rm -fr .tox/
 	rm -f .coverage
 	rm -fr htmlcov/
+
+clean-docs:
+	$(MAKE) -C docs clean
 
 lint:
 	flake8 clustercron tests
@@ -52,13 +55,12 @@ docs:
 	sphinx-apidoc -o docs/ clustercron
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
-	open docs/_build/html/index.html
 
-release: clean
+release: clean docs
 	python setup.py sdist bdist_wheel
 	twine upload dist/*
 
-dist: clean
+dist: clean docs
 	python setup.py sdist
 	python setup.py bdist_wheel
 	ls -l dist

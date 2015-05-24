@@ -5,7 +5,7 @@ Clustercron
         :target: http://badge.fury.io/py/clustercron
 
 .. image:: https://readthedocs.org/projects/clustercron/badge/?version=latest
-        :target: https://readthedocs.org/projects/clustercron/?badge=latest
+        :target: http://clustercron.readthedocs.org/en/latest/
 
 .. image:: https://travis-ci.org/maartenq/clustercron.png?branch=master
         :target: https://travis-ci.org/maartenq/clustercron

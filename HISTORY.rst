@@ -1,7 +1,14 @@
 .. :changelog:
 
 History
--------
+=======
+
+0.2.0.dev1 (2015-05-24)
+-----------------------
+
+* In Development stage 1
+* Removed HAproxy for now.
+
 
 0.1.3 (2015-05-22)
 ---------------------

@@ -112,7 +112,7 @@ def setup_logging(verbose):
 
 
 def version():
-    return '0.2.0'
+    return '0.2.0.dev1'
 
 
 def main():
