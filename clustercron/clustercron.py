@@ -6,6 +6,9 @@ Cluster Cron
 ============
 '''
 
+
+from __future__ import print_function
+
 import logging
 import sys
 from . import __version__
@@ -26,11 +29,6 @@ class Clustercron(object):
         self.args = args
         self.exitcode = 0
         print(self.args)
-        # Run sub command in scope
-        # getattr(self, self.args.cluster_type)()
-
-    def run_command(self):
-        pass
 
 
 class Optarg(object):

@@ -2,11 +2,33 @@
 Tests for `clustercron` module.
 """
 
+from __future__ import print_function
 from clustercron import clustercron
 import pytest
 
 
-def test_opt_arg_parser_init():
+def test_Clustercron_init():
+    args = {
+        'version': False,
+        'help': False,
+        'verbose': False,
+        'lb_type': None,
+        'lb_name': None,
+        'command': [],
+    }
+    cc = clustercron.Clustercron(args)
+    assert cc.args == {
+        'version': False,
+        'help': False,
+        'verbose': False,
+        'lb_type': None,
+        'lb_name': None,
+        'command': [],
+    }
+    assert cc.exitcode == 0
+
+
+def test_Optarg_init():
     opt_arg_parser = clustercron.Optarg([])
     assert opt_arg_parser.arg_list == []
     assert opt_arg_parser.args == {
@@ -58,10 +80,54 @@ is the `master` in the cluster and will return 0 if so and return 1 if not.
         }
     ),
     (
+        ['whatever', 'nonsense', 'lives', 'here', '-h'],
+        {
+            'version': False,
+            'help': True,
+            'verbose': False,
+            'lb_type': None,
+            'lb_name': None,
+            'command': [],
+        }
+    ),
+    (
         ['--help'],
         {
             'version': False,
             'help': True,
+            'verbose': False,
+            'lb_type': None,
+            'lb_name': None,
+            'command': [],
+        }
+    ),
+    (
+        ['--help', 'whatever', 'nonsense', 'lives', 'here'],
+        {
+            'version': False,
+            'help': True,
+            'verbose': False,
+            'lb_type': None,
+            'lb_name': None,
+            'command': [],
+        }
+    ),
+    (
+        ['--version'],
+        {
+            'version': True,
+            'help': False,
+            'verbose': False,
+            'lb_type': None,
+            'lb_name': None,
+            'command': [],
+        }
+    ),
+    (
+        ['whatever', 'nonsense', '--version', 'lives', 'here', 'elb'],
+        {
+            'version': True,
+            'help': False,
             'verbose': False,
             'lb_type': None,
             'lb_name': None,
@@ -113,6 +179,28 @@ is the `master` in the cluster and will return 0 if so and return 1 if not.
         }
     ),
     (
+        ['elb', '-v'],
+        {
+            'version': False,
+            'help': False,
+            'verbose': False,
+            'lb_type': 'elb',
+            'lb_name': None,
+            'command': [],
+        }
+    ),
+    (
+        ['elb', 'my_lb_name', '-v'],
+        {
+            'version': False,
+            'help': False,
+            'verbose': False,
+            'lb_type': 'elb',
+            'lb_name': 'my_lb_name',
+            'command': [],
+        }
+    ),
+    (
         ['haproxy', 'my_lb_name', 'update', '-r', 'thing'],
         {
             'version': False,
@@ -129,3 +217,27 @@ def test_opt_arg_parser(arg_list, args):
         optarg = clustercron.Optarg(arg_list)
         optarg.parse()
         assert optarg.args == args
+
+
+def test_command_valid(monkeypatch):
+    monkeypatch.setattr(
+        'sys.argv',
+        ['clustercron', 'elb', 'my_lb_name', 'update', '-r', 'thing'],
+    )
+    res = clustercron.command()
+    assert res == 0
+
+
+def test_command_version(monkeypatch):
+    monkeypatch.setattr('sys.argv', ['clustercron', '--version'])
+    res = clustercron.command()
+    assert res == 2
+
+
+def test_command_nosense(monkeypatch):
+    monkeypatch.setattr(
+        'sys.argv',
+        ['clustercron', 'bla', 'ara', 'dada', '-r', 'thing'],
+    )
+    res = clustercron.command()
+    assert res == 3

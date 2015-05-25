@@ -27,4 +27,5 @@ This project is in Pre-Alpha status.
 * GitHub: https://github.com/maartenq/clustercron
 * Documentation: https://clustercron.readthedocs.org/en/latest/
 * Travis CI: https://travis-ci.org/maartenq/clustercron
+* Codecov: https://codecov.io/github/maartenq/clustercron
 * Free software: BSD license
