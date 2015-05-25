@@ -10,8 +10,8 @@ Clustercron
 .. image:: https://travis-ci.org/maartenq/clustercron.svg?branch=master
     :target: https://travis-ci.org/maartenq/clustercron
 
-.. image:: https://coveralls.io/repos/maartenq/clustercron/badge.svg
-    :target: https://coveralls.io/r/maartenq/clustercron
+.. image:: https://codecov.io/github/maartenq/clustercron/coverage.svg?branch=master
+        :target: https://codecov.io/github/maartenq/clustercron?branch=master
 
 
 Clustercron is cronjob wrapper that tries to ensure that a script gets run only

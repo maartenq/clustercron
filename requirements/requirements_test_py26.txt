@@ -1,1 +1,0 @@
-# Requirements for testing clustercron on Python 2.6.
