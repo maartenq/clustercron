@@ -4,6 +4,7 @@
 import sys
 from setuptools import setup
 from setuptools.command.test import test as TestCommand
+from clustercron import __version__
 
 
 class PyTest(TestCommand):
@@ -40,7 +41,7 @@ if sys.version_info[:2] < (2, 7):
 
 setup(
     name='clustercron',
-    version='0.2.0.dev1',
+    version=__version__,
     description='Cron job wrapper that ensures a script gets run from one node'
     ' in the cluster.',
     long_description=readme + '\n\n' + history,
@@ -54,7 +55,7 @@ setup(
                  'clustercron'},
     entry_points={
         'console_scripts': [
-            'clustercron = clustercron.clustercron:main',
+            'clustercron = clustercron.clustercron:command',
         ]
     },
     include_package_data=True,

@@ -11,18 +11,17 @@ Clustercron
         :target: https://travis-ci.org/maartenq/clustercron
 
 
-Cron job wrapper that ensures a script gets run from one node in the cluster.
+Clustercron is cronjob wrapper that tries to ensure that a script gets run only
+once, on one host from a pool of nodes of a specified loadbalancer.
 
+Supported load balancers (till now):
+
+    * AWS Elastic Load Balancing (elb).
+
+This project is in Pre-Alpha status.
 
 * PyPi: https://pypi.python.org/pypi/clustercron
 * GitHub: https://github.com/maartenq/clustercron
 * Documentation: https://clustercron.readthedocs.org/en/latest/
 * Travis CI: https://travis-ci.org/maartenq/clustercron
 * Free software: BSD license
-
-
-Features
---------
-
-This project is in Pre-Alpha status.
-

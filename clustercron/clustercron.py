@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # vim: ts=4 et sw=4 sts=4 ft=python fenc=UTF-8 ai
-
 '''
-Cluster Cron ============
+Cluster Cron
+============
 '''
 
 import logging
 import sys
+from . import __version__
 
 
 # general libary logging
@@ -17,8 +18,6 @@ logger = logging.getLogger(__name__)
 class Clustercron(object):
     '''
     Main program class.
-    Set properties from arguments.
-    Runs sub commands in scopes.
     '''
 
     logger = logging.getLogger('clustercron')
@@ -36,34 +35,31 @@ class Clustercron(object):
 
 class Optarg(object):
     '''
-    Parse command arguments
+    Parse arguments from `sys.argv[0]` list.
+    Set usage string.
     Set properties from arguments.
-    Runs sub commands in scopes.
     '''
     def __init__(self, arg_list):
         self.arg_list = arg_list
-        # Set exitcode 3 for invalid arguments
-        self.exitcode = 3
         self.args = {
             'version': False,
             'help': False,
             'verbose': False,
-            'dry_run': False,
             'lb_type': None,
             'lb_name': None,
             'command': [],
         }
-        self.usage = \
-            'usage:  clustercron [options] elb <loadbalancer_name>' \
-            ' <cron_command>\n' \
-            '        clustercron [options] haproxy <loadbalancer_name>' \
-            ' <cron_command>\n\n' \
-            'Options:\n' \
-            '(-n|--dry-run)   Dry-run, do not run <cron_command>\n' \
-            '                 shows where <cron_command> would have ran.\n' \
-            '(-v|--verbose)   Verbose output.\n\n' \
-            '        clustercron --version\n' \
-            '        clustercron (-h|--help)\n'
+        self.usage = '''usage:
+   clustercron [(-v|--verbose)] elb <loadbalancer_name> [<cron_command>]
+   clustercron --version
+   clustercron (-h|--help)
+
+Clustercron is cronjob wrapper that tries to ensure that a script gets run
+only once, on one host from a pool of nodes of a specified loadbalancer.
+
+Without specifying a <cron_command> clustercron will only check if the node
+is the `master` in the cluster and will return 0 if so and return 1 if not.
+'''
 
     def parse(self):
         arg_list = list(self.arg_list)
@@ -76,13 +72,14 @@ class Optarg(object):
             if arg == '--version':
                 self.args['version'] = True
                 break
-            elif arg == '-v' or arg == '--verbose':
+            if arg == '-v' or arg == '--verbose':
                 self.args['verbose'] = True
-            elif arg == '-n' or arg == '--dry-run':
-                self.args['dry_run'] = True
-            elif arg in ['haproxy', 'elb']:
+            if arg == 'elb':
                 self.args['lb_type'] = arg
-                self.args['lb_name'] = arg_list.pop()
+                try:
+                    self.args['lb_name'] = arg_list.pop()
+                except IndexError:
+                    pass
                 arg_list.reverse()
                 self.args['command'] = list(arg_list)
                 break
@@ -93,50 +90,37 @@ class Optarg(object):
 
 
 def setup_logging(verbose):
-    # Set Level for console handler
+    '''
+    Sets up logging.
+    '''
     if verbose:
         log_level = logging.DEBUG
     else:
         log_level = logging.INFO
-    # Set up Console Handler
     handler_console = logging.StreamHandler()
     handler_console.setFormatter(
         logging.Formatter(fmt='%(levelname)-8s %(name)s : %(message)s')
     )
     handler_console.setLevel(log_level)
-    # Setup root logger
     root_logger = logging.getLogger()
     root_logger.setLevel(logging.DEBUG)
-    # Add Handlers
     root_logger.addHandler(handler_console)
 
 
-def version():
-    return '0.2.0.dev1'
-
-
-def main():
+def command():
     '''
     Entry point for the package, as defined in setup.py.
     '''
-    # Parse args
     optarg = Optarg(sys.argv[1:])
     optarg.parse()
     if optarg.args['version']:
-        print(version())
-        exitcode = 1
-    elif optarg.args['lb_type'] and optarg.args['lb_name'] and \
-            optarg.args['command']:
-        # Logging
+        print(__version__)
+        exitcode = 2
+    elif optarg.args['lb_type'] and optarg.args['lb_name']:
         setup_logging(optarg.args['verbose'])
-        # Args
         logger.debug('Command line arguments: %s', optarg.args)
         exitcode = Clustercron(optarg.args).exitcode
     else:
         print(optarg.usage)
-        exitcode = 1
-    sys.exit(exitcode)
-
-
-if __name__ == '__main__':
-    main()
+        exitcode = 3
+    return exitcode
