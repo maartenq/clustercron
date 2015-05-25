@@ -1,14 +1,17 @@
 Clustercron
 ===========
 
-.. image:: https://badge.fury.io/py/clustercron.png
-        :target: http://badge.fury.io/py/clustercron
+.. image:: https://badge.fury.io/py/clustercron.svg
+    :target: http://badge.fury.io/py/clustercron
 
 .. image:: https://readthedocs.org/projects/clustercron/badge/?version=latest
-        :target: http://clustercron.readthedocs.org/en/latest/
+    :target: http://clustercron.readthedocs.org/en/latest/
 
-.. image:: https://travis-ci.org/maartenq/clustercron.png?branch=master
-        :target: https://travis-ci.org/maartenq/clustercron
+.. image:: https://travis-ci.org/maartenq/clustercron.svg?branch=master
+    :target: https://travis-ci.org/maartenq/clustercron
+
+.. image:: https://coveralls.io/repos/maartenq/clustercron/badge.svg
+    :target: https://coveralls.io/r/maartenq/clustercron
 
 
 Clustercron is cronjob wrapper that tries to ensure that a script gets run only
