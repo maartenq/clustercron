@@ -35,10 +35,6 @@ test_requirements = [
     'pytest',
 ]
 
-# Add Python 2.6-specific dependencies
-if sys.version_info[:2] < (2, 7):
-    requirements.append('argparse')
-
 setup(
     name='clustercron',
     version=__version__,
