@@ -1,12 +1,14 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+# clustercron/clustercron.py
 # vim: ts=4 et sw=4 sts=4 ft=python fenc=UTF-8 ai
+# -*- coding: utf-8 -*-
+
 '''
-Cluster Cron
-============
+clustercron.main
+----------------------
 '''
 
 
+from __future__ import unicode_literals
 from __future__ import print_function
 
 import logging

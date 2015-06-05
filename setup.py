@@ -47,11 +47,10 @@ setup(
     packages=[
         'clustercron',
     ],
-    package_dir={'clustercron':
-                 'clustercron'},
+    package_dir={'clustercron': 'clustercron'},
     entry_points={
         'console_scripts': [
-            'clustercron = clustercron.clustercron:command',
+            'clustercron = clustercron.main:command',
         ]
     },
     include_package_data=True,
