@@ -3,7 +3,7 @@ Tests for `clustercron` module.
 """
 
 from __future__ import print_function
-from clustercron import clustercron
+from clustercron import main
 import pytest
 
 
@@ -16,7 +16,7 @@ def test_Clustercron_init():
         'lb_name': None,
         'command': [],
     }
-    cc = clustercron.Clustercron(args)
+    cc = main.Clustercron(args)
     assert cc.args == {
         'version': False,
         'help': False,
@@ -29,7 +29,7 @@ def test_Clustercron_init():
 
 
 def test_Optarg_init():
-    opt_arg_parser = clustercron.Optarg([])
+    opt_arg_parser = main.Optarg([])
     assert opt_arg_parser.arg_list == []
     assert opt_arg_parser.args == {
         'version': False,
@@ -42,7 +42,7 @@ def test_Optarg_init():
 
 
 def test_opt_arg_parser_usage():
-    opt_arg_parser = clustercron.Optarg([])
+    opt_arg_parser = main.Optarg([])
     assert opt_arg_parser.usage == '''usage:
    clustercron [(-v|--verbose)] elb <loadbalancer_name> [<cron_command>]
    clustercron --version
@@ -214,7 +214,7 @@ is the `master` in the cluster and will return 0 if so and return 1 if not.
 ])
 def test_opt_arg_parser(arg_list, args):
         print(arg_list)
-        optarg = clustercron.Optarg(arg_list)
+        optarg = main.Optarg(arg_list)
         optarg.parse()
         assert optarg.args == args
 
@@ -224,13 +224,13 @@ def test_command_valid(monkeypatch):
         'sys.argv',
         ['clustercron', 'elb', 'my_lb_name', 'update', '-r', 'thing'],
     )
-    res = clustercron.command()
+    res = main.command()
     assert res == 0
 
 
 def test_command_version(monkeypatch):
     monkeypatch.setattr('sys.argv', ['clustercron', '--version'])
-    res = clustercron.command()
+    res = main.command()
     assert res == 2
 
 
@@ -239,5 +239,5 @@ def test_command_nosense(monkeypatch):
         'sys.argv',
         ['clustercron', 'bla', 'ara', 'dada', '-r', 'thing'],
     )
-    res = clustercron.command()
+    res = main.command()
     assert res == 3
