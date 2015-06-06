@@ -4,10 +4,26 @@ clustercron package
 Submodules
 ----------
 
-clustercron.clustercron module
-------------------------------
+clustercron.elb module
+----------------------
 
-.. automodule:: clustercron.clustercron
+.. automodule:: clustercron.elb
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+clustercron.exceptions module
+-----------------------------
+
+.. automodule:: clustercron.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+clustercron.main module
+-----------------------
+
+.. automodule:: clustercron.main
     :members:
     :undoc-members:
     :show-inheritance:
