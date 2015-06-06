@@ -38,9 +38,9 @@ class Elb(object):
             raise UnableToGetEC2InstanceIdException
         return response
 
-#import boto
-#import boto.ec2.elb
-#conn = boto.ec2.elb.ELBConnection()
-#conn.get_all_load_balancers(load_balancer_names=['<name>']
-#i = a.instances[0]
-#i.id
+# import boto
+# import boto.ec2.elb
+# conn = boto.ec2.elb.ELBConnection()
+# conn.get_all_load_balancers(load_balancer_names=['<name>']
+# i = a.instances[0]
+# i.id
