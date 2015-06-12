@@ -29,10 +29,13 @@ class PyTest(TestCommand):
 readme = open('README.rst').read()
 history = open('HISTORY.rst').read().replace('.. :changelog:', '')
 
-requirements = []
+requirements = [
+    'boto',
+]
 
 test_requirements = [
     'pytest',
+    'tox',
 ]
 
 setup(
