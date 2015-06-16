@@ -12,17 +12,16 @@ from clustercron import elb
 def test_Elb_init():
     elb_lb = elb.Elb('mylbname')
     assert elb_lb.lb_name == 'mylbname'
-    assert elb_lb.errno == 0
 
 
-@pytest.mark.parametrize('instance_id,inst_health_states,errno', [
+@pytest.mark.parametrize('instance_id,inst_health_states,is_master', [
     (
         u'i-1d564f5c',
         [
             {'instance_id': u'i-1d564f5c', 'state': u'InService'},
             {'instance_id': u'i-cba0ce84', 'state': u'InService'},
         ],
-        0,
+        True,
     ),
     (
         u'i-1d564f5c',
@@ -30,7 +29,7 @@ def test_Elb_init():
             {'instance_id': u'i-cba0ce84', 'state': u'InService'},
             {'instance_id': u'i-1d564f5c', 'state': u'InService'},
         ],
-        0,
+        True,
     ),
     (
         u'i-1d564f5c',
@@ -38,7 +37,7 @@ def test_Elb_init():
             {'instance_id': u'i-cba0ce84', 'state': u'Anything'},
             {'instance_id': u'i-1d564f5c', 'state': u'InService'},
         ],
-        0,
+        True,
     ),
     (
         u'i-cba0ce84',
@@ -46,7 +45,7 @@ def test_Elb_init():
             {'instance_id': u'i-1d564f5c', 'state': u'InService'},
             {'instance_id': u'i-cba0ce84', 'state': u'InService'},
         ],
-        1,
+        False,
     ),
     (
         u'i-cba0ce84',
@@ -54,7 +53,7 @@ def test_Elb_init():
             {'instance_id': u'i-cba0ce84', 'state': u'InService'},
             {'instance_id': u'i-1d564f5c', 'state': u'InService'},
         ],
-        1,
+        False,
     ),
     (
         u'i-cba0ce84',
@@ -62,7 +61,7 @@ def test_Elb_init():
             {'instance_id': u'i-cba0ce84', 'state': u'InService'},
             {'instance_id': u'i-1d564f5c', 'state': u'anything'},
         ],
-        0,
+        True,
     ),
     (
         None,
@@ -70,7 +69,7 @@ def test_Elb_init():
             {'instance_id': u'i-1d564f5c', 'state': u'InService'},
             {'instance_id': u'i-cba0ce84', 'state': u'InService'},
         ],
-        1,
+        False,
     ),
     (
         None,
@@ -78,13 +77,11 @@ def test_Elb_init():
             {'instance_id': u'i-1d564f5c', 'state': u'InService'},
             {'instance_id': u'i-cba0ce84', 'state': u'InService'},
         ],
-        1,
+        False,
     ),
 ])
-def test_elb__check_master(instance_id, inst_health_states, errno):
-    print(instance_id, inst_health_states, errno)
+def test_elb_is_master(instance_id, inst_health_states, is_master):
+    print(instance_id, inst_health_states, is_master)
     elb_lb = elb.Elb('mylbname')
-    elb_lb._check_master(
-        instance_id, [mock.Mock(**x) for x in inst_health_states]
-    )
-    assert elb_lb.errno == errno
+    assert elb_lb._is_master(
+        instance_id, [mock.Mock(**x) for x in inst_health_states]) == is_master

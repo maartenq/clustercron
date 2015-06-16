@@ -7,27 +7,6 @@ from clustercron import main
 import pytest
 
 
-def test_Clustercron_init():
-    args = {
-        'version': False,
-        'help': False,
-        'verbose': False,
-        'lb_type': None,
-        'lb_name': None,
-        'command': [],
-    }
-    cc = main.Clustercron(args)
-    assert cc.args == {
-        'version': False,
-        'help': False,
-        'verbose': False,
-        'lb_type': None,
-        'lb_name': None,
-        'command': [],
-    }
-    assert cc.exitcode == 0
-
-
 def test_Optarg_init():
     opt_arg_parser = main.Optarg([])
     assert opt_arg_parser.arg_list == []
@@ -217,15 +196,6 @@ def test_opt_arg_parser(arg_list, args):
         optarg = main.Optarg(arg_list)
         optarg.parse()
         assert optarg.args == args
-
-
-def test_command_valid(monkeypatch):
-    monkeypatch.setattr(
-        'sys.argv',
-        ['clustercron', 'elb', 'my_lb_name', 'update', '-r', 'thing'],
-    )
-    res = main.command()
-    assert res == 0
 
 
 def test_command_version(monkeypatch):
