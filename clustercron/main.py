@@ -13,24 +13,42 @@ from __future__ import print_function
 
 import logging
 import sys
+import subprocess
 from . import __version__
+from . import elb
 
 
 # general libary logging
 logger = logging.getLogger(__name__)
 
 
-class Clustercron(object):
+def clustercron(lb_type, lb_name, command):
     '''
-    Main program class.
+    API clustercron
+
+    :param lb_type: Type of loadbalancer
+    :param lb_name: Name of the loadbalancer instance
+    :param command:  command as a list
     '''
-
-    logger = logging.getLogger('clustercron')
-
-    def __init__(self, args):
-        self.args = args
-        self.exitcode = 0
-        print(self.args)
+    if lb_type == 'elb':
+        lb = elb.Elb(lb_type)
+        if lb.master:
+            if command:
+                logger.debug('run command: %s', ' '.join(command))
+                proc = subprocess.Popen(
+                    command,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE
+                )
+                stdout, stderr = proc.communicate()
+                logger.debug('stdout: %s', stdout)
+                logger.debug('stderr: %s', stderr)
+                logger.debug('returncode: %d', proc.returncode)
+                return proc.returncode
+            else:
+                return 0
+        else:
+            return 1
 
 
 class Optarg(object):
@@ -119,7 +137,11 @@ def command():
     elif optarg.args['lb_type'] and optarg.args['lb_name']:
         setup_logging(optarg.args['verbose'])
         logger.debug('Command line arguments: %s', optarg.args)
-        exitcode = Clustercron(optarg.args).exitcode
+        exitcode = clustercron(
+            optarg.args['lb_type'],
+            optarg.args['lb_name'],
+            optarg.args['command'],
+        )
     else:
         print(optarg.usage)
         exitcode = 3

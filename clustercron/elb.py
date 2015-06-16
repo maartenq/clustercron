@@ -32,12 +32,9 @@ logger = logging.getLogger(__name__)
 class Elb(object):
     URL_INSTANCE_ID = \
         'http://169.254.169.254/1.0/meta-data/instance-id'
-    ERRNO_UNABLE_TO_GET_INSTANCE_ID = 2
-    ERRNO_UNABLE_TO_GET_HEALTH_STATE = 4
 
-    def __init__(self, lb_name, error_code=0,  timeout=3):
+    def __init__(self, lb_name, timeout=3):
         self.lb_name = lb_name
-        self.error_code = error_code
         socket.setdefaulttimeout(timeout)
 
     def _get_instance_id(self):
@@ -45,10 +42,11 @@ class Elb(object):
         try:
             response = urlopen(request)
         except URLError:
-            self.error_code += self.ERRNO_UNABLE_TO_GET_INSTANCE_ID
             instance_id = None
+            logger.error('Could not get instance ID')
         else:
             instance_id = response.read()[:10]
+            logger.debug('Instance ID: %s', instance_id)
         return instance_id
 
     def _get_inst_health_states(self):
@@ -58,19 +56,23 @@ class Elb(object):
                 load_balancer_names=[self.lb_name])[0]
             inst_health_states = lb.get_instance_health()
         except Exception as error:
-            logger.debug(error)
-            self.error_code += self.ERRNO_UNABLE_TO_GET_HEALTH_STATE
+            logger.error('Could not get instance health states: %s', error)
             inst_health_states = []
         return inst_health_states
 
     def _is_master(self, instance_id, inst_health_states):
         res = False
-        instances_in_service = [
+        instances_all = sorted([x.instance_id for x in inst_health_states])
+        logger.debug('instances: %s', ', '.join(instances_all))
+        instances_in_service = sorted([
             x.instance_id for x in inst_health_states
             if x.state == 'InService'
-        ]
+        ])
+        logger.debug(
+            'Instances in service: %s',
+            ', '.join(instances_in_service)
+        )
         if instances_in_service:
-            instances_in_service.sort()
             res = instance_id == instances_in_service[0]
         return res
 

@@ -12,7 +12,6 @@ from clustercron import elb
 def test_Elb_init():
     elb_lb = elb.Elb('mylbname')
     assert elb_lb.lb_name == 'mylbname'
-    assert elb_lb.error_code == 0
 
 
 @pytest.mark.parametrize('instance_id,inst_health_states,is_master', [
