@@ -129,8 +129,8 @@ def setup_logging(verbose, syslog):
         log_level = logging.WARNING
     if syslog:
         unix_socket = {
-            'linux2': '/dev/log',
-            'darwin': '/var/run/syslog'
+            'linux2': b'/dev/log',
+            'darwin': b'/var/run/syslog'
         }.get(sys.platform, '')
         if os.path.exists(unix_socket) and \
                 stat.S_ISSOCK(os.stat(unix_socket).st_mode):
