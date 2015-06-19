@@ -67,26 +67,23 @@ class Elb(object):
         logger.debug('Check if instance is master')
         res = False
         instances_all = sorted([x.instance_id for x in inst_health_states])
-        logger.info('instances: %s', ', '.join(instances_all))
+        logger.info(
+            'All instances: %s Instance in list: %s',
+            ', '.join(instances_all),
+            instance_id in instances_all,
+        )
         instances_in_service = sorted([
             x.instance_id for x in inst_health_states
             if x.state == 'InService'
         ])
         logger.info(
-            'Instances in service: %s',
-            ', '.join(instances_in_service)
+            'Instances in service: %s Instance in list: %s',
+            ', '.join(instances_in_service),
+            instance_id in instances_in_service,
         )
         if instances_in_service:
             res = instance_id == instances_in_service[0]
         logger.info('This instance master: %s', res)
-        logger.info(
-            'This instance in `instances in service` list: %s',
-            instance_id in instances_in_service
-        )
-        logger.info(
-            'This instance in `all instances` list: %s',
-            instance_id in instances_all
-        )
         return res
 
     @property
