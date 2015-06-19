@@ -3,7 +3,7 @@ Tests for `clustercron` module.
 """
 
 from __future__ import print_function
-
+from __future__ import unicode_literals
 import mock
 import pytest
 from clustercron import elb

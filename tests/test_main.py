@@ -3,6 +3,7 @@ Tests for `clustercron` module.
 """
 
 from __future__ import print_function
+from __future__ import unicode_literals
 from clustercron import main
 import pytest
 
@@ -13,10 +14,11 @@ def test_Optarg_init():
     assert opt_arg_parser.args == {
         'version': False,
         'help': False,
-        'verbose': False,
+        'verbose': 0,
         'lb_type': None,
         'lb_name': None,
         'command': [],
+        'syslog': False,
     }
 
 
@@ -38,16 +40,18 @@ Without specifying a <cron_command> clustercron will only check if the node
 is the `master` in the cluster and will return 0 if so.
 '''
 
+
 @pytest.mark.parametrize('arg_list,args', [
     (
         [],
         {
             'version': False,
             'help': False,
-            'verbose': False,
+            'verbose': 0,
             'lb_type': None,
             'lb_name': None,
             'command': [],
+            'syslog': False,
         }
     ),
     (
@@ -55,10 +59,11 @@ is the `master` in the cluster and will return 0 if so.
         {
             'version': False,
             'help': True,
-            'verbose': False,
+            'verbose': 0,
             'lb_type': None,
             'lb_name': None,
             'command': [],
+            'syslog': False,
         }
     ),
     (
@@ -66,10 +71,11 @@ is the `master` in the cluster and will return 0 if so.
         {
             'version': False,
             'help': True,
-            'verbose': False,
+            'verbose': 0,
             'lb_type': None,
             'lb_name': None,
             'command': [],
+            'syslog': False,
         }
     ),
     (
@@ -77,10 +83,11 @@ is the `master` in the cluster and will return 0 if so.
         {
             'version': False,
             'help': True,
-            'verbose': False,
+            'verbose': 0,
             'lb_type': None,
             'lb_name': None,
             'command': [],
+            'syslog': False,
         }
     ),
     (
@@ -88,10 +95,11 @@ is the `master` in the cluster and will return 0 if so.
         {
             'version': False,
             'help': True,
-            'verbose': False,
+            'verbose': 0,
             'lb_type': None,
             'lb_name': None,
             'command': [],
+            'syslog': False,
         }
     ),
     (
@@ -99,10 +107,11 @@ is the `master` in the cluster and will return 0 if so.
         {
             'version': True,
             'help': False,
-            'verbose': False,
+            'verbose': 0,
             'lb_type': None,
             'lb_name': None,
             'command': [],
+            'syslog': False,
         }
     ),
     (
@@ -110,10 +119,11 @@ is the `master` in the cluster and will return 0 if so.
         {
             'version': True,
             'help': False,
-            'verbose': False,
+            'verbose': 0,
             'lb_type': None,
             'lb_name': None,
             'command': [],
+            'syslog': False,
         }
     ),
     (
@@ -121,10 +131,23 @@ is the `master` in the cluster and will return 0 if so.
         {
             'version': False,
             'help': False,
-            'verbose': True,
+            'verbose': 1,
             'lb_type': 'elb',
             'lb_name': 'my_lb_name',
             'command': ['update', '-r', 'thing'],
+            'syslog': False,
+        }
+    ),
+    (
+        ['-v', '-v', 'elb', 'my_lb_name', 'update', '-r', 'thing'],
+        {
+            'version': False,
+            'help': False,
+            'verbose': 2,
+            'lb_type': 'elb',
+            'lb_name': 'my_lb_name',
+            'command': ['update', '-r', 'thing'],
+            'syslog': False,
         }
     ),
     (
@@ -132,10 +155,11 @@ is the `master` in the cluster and will return 0 if so.
         {
             'version': False,
             'help': False,
-            'verbose': False,
+            'verbose': 0,
             'lb_type': 'elb',
             'lb_name': 'my_lb_name',
             'command': ['update', '-r', 'thing'],
+            'syslog': False,
         }
     ),
     (
@@ -143,10 +167,11 @@ is the `master` in the cluster and will return 0 if so.
         {
             'version': False,
             'help': False,
-            'verbose': False,
+            'verbose': 0,
             'lb_type': 'elb',
             'lb_name': 'my_lb_name',
             'command': [],
+            'syslog': False,
         }
     ),
     (
@@ -154,10 +179,11 @@ is the `master` in the cluster and will return 0 if so.
         {
             'version': False,
             'help': False,
-            'verbose': False,
+            'verbose': 0,
             'lb_type': 'elb',
             'lb_name': None,
             'command': [],
+            'syslog': False,
         }
     ),
     (
@@ -165,10 +191,11 @@ is the `master` in the cluster and will return 0 if so.
         {
             'version': False,
             'help': False,
-            'verbose': False,
+            'verbose': 0,
             'lb_type': 'elb',
             'lb_name': None,
             'command': [],
+            'syslog': False,
         }
     ),
     (
@@ -176,21 +203,23 @@ is the `master` in the cluster and will return 0 if so.
         {
             'version': False,
             'help': False,
-            'verbose': False,
+            'verbose': 0,
             'lb_type': 'elb',
             'lb_name': 'my_lb_name',
             'command': [],
+            'syslog': False,
         }
     ),
     (
-        ['haproxy', 'my_lb_name', 'update', '-r', 'thing'],
+        ['-v', '-v', '-s', 'elb', 'my_lb_name', 'test', '-v'],
         {
             'version': False,
             'help': False,
-            'verbose': False,
-            'lb_type': None,
-            'lb_name': None,
-            'command': [],
+            'verbose': 2,
+            'lb_type': 'elb',
+            'lb_name': 'my_lb_name',
+            'command': ['test', '-v'],
+            'syslog': True,
         }
     ),
 ])
