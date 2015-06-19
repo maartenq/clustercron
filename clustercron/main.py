@@ -34,16 +34,16 @@ def clustercron(lb_type, lb_name, command):
         lb = elb.Elb(lb_name)
         if lb.master:
             if command:
-                logger.debug('run command: %s', ' '.join(command))
+                logger.info('run command: %s', ' '.join(command))
                 proc = subprocess.Popen(
                     command,
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE
                 )
                 stdout, stderr = proc.communicate()
-                logger.debug('stdout: %s', stdout)
-                logger.debug('stderr: %s', stderr)
-                logger.debug('returncode: %d', proc.returncode)
+                logger.info('stdout: %s', stdout)
+                logger.info('stderr: %s', stderr)
+                logger.info('returncode: %d', proc.returncode)
                 return proc.returncode
             else:
                 return 0
@@ -62,7 +62,7 @@ class Optarg(object):
         self.args = {
             'version': False,
             'help': False,
-            'verbose': False,
+            'verbose': 0,
             'lb_type': None,
             'lb_name': None,
             'command': [],
@@ -91,7 +91,7 @@ is the `master` in the cluster and will return 0 if so.
                 self.args['version'] = True
                 break
             if arg == '-v' or arg == '--verbose':
-                self.args['verbose'] = True
+                self.args['verbose'] += 1
             if arg == 'elb':
                 self.args['lb_type'] = arg
                 try:
@@ -105,16 +105,19 @@ is the `master` in the cluster and will return 0 if so.
             self.args['lb_name'] = None
         if self.args['command'] and self.args['command'][0].startswith('-'):
             self.args['command'] = []
+        logger.debug('verbose: %s', self.args['verbose'])
 
 
 def setup_logging(verbose):
     '''
     Sets up logging.
     '''
-    if verbose:
+    if verbose > 1:
         log_level = logging.DEBUG
-    else:
+    elif verbose > 0:
         log_level = logging.INFO
+    else:
+        log_level = logging.WARNING
     handler_console = logging.StreamHandler()
     handler_console.setFormatter(
         logging.Formatter(fmt='%(levelname)-8s %(name)s : %(message)s')

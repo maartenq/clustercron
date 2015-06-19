@@ -38,6 +38,7 @@ class Elb(object):
         socket.setdefaulttimeout(timeout)
 
     def _get_instance_id(self):
+        logger.debug('Get instance ID')
         request = Request(self.URL_INSTANCE_ID)
         try:
             response = urlopen(request)
@@ -46,40 +47,43 @@ class Elb(object):
             logger.error('Could not get instance ID')
         else:
             instance_id = response.read()[:10]
-            logger.debug('Instance ID: %s', instance_id)
+            logger.info('Instance ID: %s', instance_id)
         return instance_id
 
     def _get_inst_health_states(self):
+        logger.debug('Get instance health states')
         try:
             conn = boto.ec2.elb.ELBConnection()
             lb = conn.get_all_load_balancers(
                 load_balancer_names=[self.lb_name])[0]
             inst_health_states = lb.get_instance_health()
+            logger.debug('Instance health states: %s', inst_health_states)
         except Exception as error:
             logger.error('Could not get instance health states: %s', error)
             inst_health_states = []
         return inst_health_states
 
     def _is_master(self, instance_id, inst_health_states):
+        logger.debug('Check if instance is master')
         res = False
         instances_all = sorted([x.instance_id for x in inst_health_states])
-        logger.debug('instances: %s', ', '.join(instances_all))
+        logger.info('instances: %s', ', '.join(instances_all))
         instances_in_service = sorted([
             x.instance_id for x in inst_health_states
             if x.state == 'InService'
         ])
-        logger.debug(
+        logger.info(
             'Instances in service: %s',
             ', '.join(instances_in_service)
         )
         if instances_in_service:
             res = instance_id == instances_in_service[0]
-        logger.debug('This instance master: %s', res)
-        logger.debug(
+        logger.info('This instance master: %s', res)
+        logger.info(
             'This instance in `instances in service` list: %s',
             instance_id in instances_in_service
         )
-        logger.debug(
+        logger.info(
             'This instance in `all instances` list: %s',
             instance_id in instances_all
         )
