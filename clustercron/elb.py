@@ -80,6 +80,6 @@ class Elb(object):
     def master(self):
         instance_id = self._get_instance_id()
         if instance_id:
-            inst_health_states = self._get_inst_health_states(self)
+            inst_health_states = self._get_inst_health_states()
             return self._is_master(instance_id, inst_health_states)
         return False
