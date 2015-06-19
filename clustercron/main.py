@@ -12,6 +12,8 @@ from __future__ import unicode_literals
 from __future__ import print_function
 
 import logging
+import os
+import stat
 import sys
 import subprocess
 from . import __version__
@@ -68,9 +70,13 @@ class Optarg(object):
             'command': [],
         }
         self.usage = '''usage:
-   clustercron [(-v|--verbose)] elb <loadbalancer_name> [<cron_command>]
-   clustercron --version
-   clustercron (-h|--help)
+    clustercron [options] elb <loadbalancer_name> [<cron_command>]
+    clustercron --version
+    clustercron (-h|--help)
+
+    options:
+        (-v|--verbose)  Info logging. Add extra `-v` for debug logging.
+        (-s|--syslog)   Log to (local) syslog.
 
 Clustercron is cronjob wrapper that tries to ensure that a script gets run
 only once, on one host from a pool of nodes of a specified loadbalancer.
@@ -92,6 +98,8 @@ is the `master` in the cluster and will return 0 if so.
                 break
             if arg == '-v' or arg == '--verbose':
                 self.args['verbose'] += 1
+            if arg == '-s' or arg == '--syslog':
+                self.args['syslog'] = True
             if arg == 'elb':
                 self.args['lb_type'] = arg
                 try:
@@ -108,7 +116,7 @@ is the `master` in the cluster and will return 0 if so.
         logger.debug('verbose: %s', self.args['verbose'])
 
 
-def setup_logging(verbose):
+def setup_logging(verbose, syslog=False):
     '''
     Sets up logging.
     '''
@@ -118,14 +126,29 @@ def setup_logging(verbose):
         log_level = logging.INFO
     else:
         log_level = logging.WARNING
-    handler_console = logging.StreamHandler()
-    handler_console.setFormatter(
-        logging.Formatter(fmt='%(levelname)-8s %(name)s : %(message)s')
-    )
-    handler_console.setLevel(log_level)
+    if syslog:
+        unix_socket = {
+            'linux2': '/dev/log',
+            'darwin': '/var/run/syslog'
+        }.get(sys.platform, '')
+        if os.path.exists(unix_socket) and \
+                stat.S_ISSOCK(os.stat(unix_socket).st_mode):
+            handler = logging.handlers.SysLogHandler(unix_socket)
+            handler.setFormatter(
+                logging.Formatter(
+                    fmt='%(name)s [%(process)d]: %(message)s',
+                    datefmt=None,
+                )
+            )
+    else:
+        handler = logging.StreamHandler()
+        handler.setFormatter(
+            logging.Formatter(fmt='%(levelname)-8s %(name)s : %(message)s')
+        )
+        handler.setLevel(log_level)
     root_logger = logging.getLogger()
     root_logger.setLevel(logging.DEBUG)
-    root_logger.addHandler(handler_console)
+    root_logger.addHandler(handler)
 
 
 def command():

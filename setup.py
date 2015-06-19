@@ -8,7 +8,7 @@ from clustercron import __version__
 
 
 class PyTest(TestCommand):
-    user_options = [('pytest-args=', 'a', "Arguments to pass to py.test")]
+    user_options = [('pytest-args=', 'a', 'Arguments to pass to py.test')]
 
     def initialize_options(self):
         TestCommand.initialize_options(self)
@@ -58,20 +58,24 @@ setup(
     },
     include_package_data=True,
     install_requires=requirements,
-    license="BSD",
+    license='BSD',
     zip_safe=False,
     keywords='clustercron',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
-        'Intended Audience :: Developers',
+        'Environment :: Console',
+        'Intended Audience :: System Administrators',
         'License :: OSI Approved :: BSD License',
         'Natural Language :: English',
-        "Programming Language :: Python :: 2",
+        'Operating System :: POSIX',
+        'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
+        'Topic :: Documentation :: Sphinx',
+        'Topic :: Utilities',
     ],
     test_suite='tests',
     cmdclass={'test': PyTest},

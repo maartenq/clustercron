@@ -23,9 +23,13 @@ def test_Optarg_init():
 def test_opt_arg_parser_usage():
     opt_arg_parser = main.Optarg([])
     assert opt_arg_parser.usage == '''usage:
-   clustercron [(-v|--verbose)] elb <loadbalancer_name> [<cron_command>]
-   clustercron --version
-   clustercron (-h|--help)
+    clustercron [options] elb <loadbalancer_name> [<cron_command>]
+    clustercron --version
+    clustercron (-h|--help)
+
+    options:
+        (-v|--verbose)  Info logging. Add extra `-v` for debug logging.
+        (-s|--syslog)   Log to (local) syslog.
 
 Clustercron is cronjob wrapper that tries to ensure that a script gets run
 only once, on one host from a pool of nodes of a specified loadbalancer.
@@ -33,7 +37,6 @@ only once, on one host from a pool of nodes of a specified loadbalancer.
 Without specifying a <cron_command> clustercron will only check if the node
 is the `master` in the cluster and will return 0 if so.
 '''
-
 
 @pytest.mark.parametrize('arg_list,args', [
     (
