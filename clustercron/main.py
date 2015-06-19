@@ -65,6 +65,7 @@ class Optarg(object):
             'version': False,
             'help': False,
             'verbose': 0,
+            'syslog': False,
             'lb_type': None,
             'lb_name': None,
             'command': [],
@@ -116,7 +117,7 @@ is the `master` in the cluster and will return 0 if so.
         logger.debug('verbose: %s', self.args['verbose'])
 
 
-def setup_logging(verbose, syslog=False):
+def setup_logging(verbose, syslog):
     '''
     Sets up logging.
     '''
@@ -161,7 +162,7 @@ def command():
         print(__version__)
         exitcode = 2
     elif optarg.args['lb_type'] and optarg.args['lb_name']:
-        setup_logging(optarg.args['verbose'])
+        setup_logging(optarg.args['verbose'], optarg.args['syslog'])
         logger.debug('Command line arguments: %s', optarg.args)
         exitcode = clustercron(
             optarg.args['lb_type'],
