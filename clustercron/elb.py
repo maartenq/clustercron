@@ -74,6 +74,15 @@ class Elb(object):
         )
         if instances_in_service:
             res = instance_id == instances_in_service[0]
+        logger.debug('This instance master: %s', res)
+        logger.debug(
+            'This instance in `instances in service` list: %s',
+            instance_id in instances_in_service
+        )
+        logger.debug(
+            'This instance in `all instances` list: %s',
+            instance_id in instances_all
+        )
         return res
 
     @property
