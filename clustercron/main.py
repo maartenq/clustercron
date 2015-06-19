@@ -31,7 +31,7 @@ def clustercron(lb_type, lb_name, command):
     :param command:  command as a list
     '''
     if lb_type == 'elb':
-        lb = elb.Elb(lb_type)
+        lb = elb.Elb(lb_name)
         if lb.master:
             if command:
                 logger.debug('run command: %s', ' '.join(command))
