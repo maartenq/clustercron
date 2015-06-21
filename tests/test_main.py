@@ -5,6 +5,7 @@ Tests for `clustercron` module.
 from __future__ import print_function
 from __future__ import unicode_literals
 from clustercron import main
+import logging
 import pytest
 
 
@@ -243,3 +244,21 @@ def test_command_nosense(monkeypatch):
     )
     res = main.command()
     assert res == 3
+
+
+@pytest.mark.parametrize(
+    'verbose,syslog,log_level',
+    [
+        (0, False, logging.ERROR),
+        (1, False, logging.INFO),
+        (2, False, logging.DEBUG),
+        (0, True, logging.ERROR),
+        (1, True, logging.INFO),
+        (2, True, logging.DEBUG),
+
+    ]
+ )
+def test_setup_logging_level(verbose, syslog, log_level):
+    main.setup_logging(verbose, syslog)
+    logger = logging.getLogger()
+    assert logger.handlers[0].level == log_level

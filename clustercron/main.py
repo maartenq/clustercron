@@ -120,12 +120,16 @@ def setup_logging(verbose, syslog):
     '''
     Sets up logging.
     '''
+    logger = logging.getLogger()
+    # Make sure no handlers hangin' round
+    [handler.close() for handler in logger.handlers]
+    logger.handlers = []
     if verbose > 1:
         log_level = logging.DEBUG
     elif verbose > 0:
         log_level = logging.INFO
     else:
-        log_level = logging.WARNING
+        log_level = logging.ERROR
     if syslog:
         unix_socket = {
             'linux2': b'/dev/log',
@@ -145,10 +149,9 @@ def setup_logging(verbose, syslog):
         handler.setFormatter(
             logging.Formatter(fmt='%(levelname)-8s %(name)s : %(message)s')
         )
-        handler.setLevel(log_level)
-    root_logger = logging.getLogger()
-    root_logger.setLevel(logging.DEBUG)
-    root_logger.addHandler(handler)
+    handler.setLevel(log_level)
+    logger.setLevel(logging.DEBUG)
+    logger.addHandler(handler)
 
 
 def command():
