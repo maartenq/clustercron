@@ -124,12 +124,17 @@ def setup_logging(verbose, syslog):
     # Make sure no handlers hangin' round
     [handler.close() for handler in logger.handlers]
     logger.handlers = []
+    # root logger logs all
+    logger.setLevel(logging.DEBUG)
+    # Get log level for handlers
     if verbose > 1:
         log_level = logging.DEBUG
     elif verbose > 0:
         log_level = logging.INFO
     else:
         log_level = logging.ERROR
+    handler = logging.StreamHandler()
+    formatter = logging.Formatter(fmt='%(levelname)-8s %(name)s : %(message)s')
     if syslog:
         unix_socket = {
             'linux2': b'/dev/log',
@@ -138,19 +143,11 @@ def setup_logging(verbose, syslog):
         if os.path.exists(unix_socket) and \
                 stat.S_ISSOCK(os.stat(unix_socket).st_mode):
             handler = logging.handlers.SysLogHandler(unix_socket)
-            handler.setFormatter(
-                logging.Formatter(
-                    fmt='%(name)s [%(process)d]: %(message)s',
-                    datefmt=None,
-                )
+            formatter = logging.Formatter(
+                fmt='%(name)s [%(process)d]: %(message)s', datefmt=None
             )
-    else:
-        handler = logging.StreamHandler()
-        handler.setFormatter(
-            logging.Formatter(fmt='%(levelname)-8s %(name)s : %(message)s')
-        )
+    handler.setFormatter(formatter)
     handler.setLevel(log_level)
-    logger.setLevel(logging.DEBUG)
     logger.addHandler(handler)
 
 
