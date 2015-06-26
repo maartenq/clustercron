@@ -1,12 +1,21 @@
-============
 Installation
 ============
 
-At the command line::
+Virtualenv
+----------
 
-    $ easy_install clustercron
+* Make virtual environment::
 
-Or, if you have virtualenvwrapper installed::
+    $ virtualenv /<path>/<to>/clustercron
 
-    $ mkvirtualenv clustercron
-    $ pip install clustercron
+
+* Activate virtual environment::
+
+    $ source /<path>/<to>/clustercron/bin/activate
+
+
+* Install *clustercron*::
+
+    (clustercron)$ pip install clustercron
+
+
