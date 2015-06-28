@@ -8,8 +8,10 @@ Contents:
    :maxdepth: 2
 
    readme
+   elb
    installation
    usage
+   modules
    contributing
    authors
    history
