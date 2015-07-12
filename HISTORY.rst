@@ -3,6 +3,12 @@
 History
 =======
 
+0.3.2 (2015-07-12)
+-----------------------
+
+* Fix mock requirements in tox.ini (mock 1.1.1 doesn't work with Python 2.6)
+
+
 0.3.1 (2015-06-28)
 -----------------------
 
