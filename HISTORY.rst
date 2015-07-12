@@ -3,6 +3,12 @@
 History
 =======
 
+0.3.3 (2015-07-12)
+-----------------------
+
+* Remove :ref: tag from README.rst (for formatting on PyPi)
+
+
 0.3.2 (2015-07-12)
 -----------------------
 

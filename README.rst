@@ -20,7 +20,7 @@ once, on one host from a pool of nodes of a specified loadbalancer.
 
 Supported load balancers (till now):
 
-    * AWS Elastic Load Balancing :ref:`clustercron-elb`
+    * AWS Elastic Load Balancing
 
 * PyPi: https://pypi.python.org/pypi/clustercron
 * GitHub: https://github.com/maartenq/clustercron
