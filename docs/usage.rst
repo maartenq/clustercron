@@ -56,7 +56,7 @@ Check if node is master with verbose (info) output::
     INFO     clustercron.elb : This instance master: False
 
 
-One node *OutOfService*::
+Check if node is master with verbose (info) output::
 
     clustercron -v elb mylbname
     INFO     clustercron.elb : Instance ID: i-ca289460
