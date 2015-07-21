@@ -9,9 +9,14 @@ import pytest
 from clustercron import elb
 
 
+def test_Elb_constants():
+    assert elb.Elb.URL_INSTANCE_ID == \
+        'http://169.254.169.254/1.0/meta-data/instance-id'
+
+
 def test_Elb_init():
     elb_lb = elb.Elb('mylbname')
-    assert elb_lb.lb_name == 'mylbname'
+    assert elb_lb.__dict__ == {'lb_name': 'mylbname'}
 
 
 @pytest.mark.parametrize('instance_id,inst_health_states,is_master', [
