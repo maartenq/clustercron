@@ -37,7 +37,6 @@ requirements = [
 test_requirements = [
     'pytest',
     'tox',
-    'mock',
     'responses',
 ]
 
