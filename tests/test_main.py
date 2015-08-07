@@ -4,9 +4,66 @@ Tests for `clustercron` module.
 
 from __future__ import print_function
 from __future__ import unicode_literals
-from clustercron import main
 import logging
 import pytest
+from clustercron import elb
+from clustercron import main
+
+
+def test_clustercron_returns_None_when_lb_type_is_not_elb():
+    '''
+    Test if `main.clustercron` returns None when `lb_type` is not 'elb'.
+    '''
+    assert main.clustercron('really_not_elb', 'mylbname', 'command') == None
+
+
+def test_clustercron_returns_2_when_master_and_command_exits_2(monkeypatch):
+    '''
+    Test if `main.clustercron` returns 2 when `lb.master` and command exits
+    with 2.
+    '''
+    class Elb_mocked(object):
+        def __init__(self, name):
+            self.master = True
+
+    class Popen_mocked(object):
+        def __init__(self, command, stdout, stderr):
+            self.returncode = 2
+
+        def communicate(self):
+            return (None, None)
+
+    monkeypatch.setattr(elb, 'Elb', Elb_mocked)
+    monkeypatch.setattr('subprocess.Popen', Popen_mocked)
+
+    assert main.clustercron('elb', 'mylbname', 'a_command') == 2
+
+
+def test_clustercron_returns_0_when_master_and_command_is_none(monkeypatch):
+    '''
+    Test if `main.clustercron` returns 0 when `lb.master` and `command` is
+    None.
+    '''
+    class Elb_mocked(object):
+        def __init__(self, name):
+            self.master = True
+
+    monkeypatch.setattr(elb, 'Elb', Elb_mocked)
+
+    assert main.clustercron('elb', 'mylbname', None) == 0
+
+
+def test_clustercron_returns_1_when_not_master(monkeypatch):
+    '''
+    Test if `main.clustercron` returns 1 when not `lb.master`
+    '''
+    class Elb_mocked(object):
+        def __init__(self, name):
+            self.master = False
+
+    monkeypatch.setattr(elb, 'Elb', Elb_mocked)
+
+    assert main.clustercron('elb', 'mylbname', None) == 1
 
 
 def test_Optarg_init():
@@ -232,9 +289,28 @@ def test_opt_arg_parser(arg_list, args):
 
 
 def test_command_version(monkeypatch):
+    '''
+    Test if `cluster.command` returns 2 with '--version'
+    '''
     monkeypatch.setattr('sys.argv', ['clustercron', '--version'])
-    res = main.command()
-    assert res == 2
+    assert main.command() == 2
+
+
+def test_command_elb_lb_name_a_command_arguments(monkeypatch):
+    '''
+    Test if `cluster.command` returns 1 with 'elb', 'lb_name' and 'a_command'
+    arguments.
+    '''
+    monkeypatch.setattr(
+        'sys.argv',
+        ['clustercron', 'elb', 'lb_name', 'a_command']
+    )
+    monkeypatch.setattr(
+        main,
+        'clustercron',
+        lambda lb_type, lb_name, commmand: 0
+    )
+    assert main.command() == 0
 
 
 def test_command_nosense(monkeypatch):
@@ -242,8 +318,7 @@ def test_command_nosense(monkeypatch):
         'sys.argv',
         ['clustercron', 'bla', 'ara', 'dada', '-r', 'thing'],
     )
-    res = main.command()
-    assert res == 3
+    assert main.command() == 3
 
 
 @pytest.mark.parametrize(
