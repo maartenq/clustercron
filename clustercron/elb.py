@@ -10,20 +10,8 @@ clustercron.elb
 from __future__ import unicode_literals
 
 import logging
-import socket
+import requests
 import boto.ec2.elb
-
-from .compat import PY3
-
-if PY3:
-    from urllib.request import Request
-    from urllib.request import urlopen
-    from urllib.error import URLError
-
-else:
-    from urllib2 import Request
-    from urllib2 import urlopen
-    from urllib2 import URLError
 
 
 logger = logging.getLogger(__name__)
@@ -35,18 +23,17 @@ class Elb(object):
 
     def __init__(self, lb_name, timeout=3):
         self.lb_name = lb_name
-        socket.setdefaulttimeout(timeout)
+        self.timeout = timeout
 
     def _get_instance_id(self):
         logger.debug('Get instance ID')
-        request = Request(self.URL_INSTANCE_ID)
         try:
-            response = urlopen(request)
-        except URLError:
+            resp = requests.get(self.URL_INSTANCE_ID, timeout=self.timeout)
+        except Exception as error:
             instance_id = None
-            logger.error('Could not get instance ID')
+            logger.error('Could not get instance health states: %s', error)
         else:
-            instance_id = response.read()[:10]
+            instance_id = resp.text
             logger.info('Instance ID: %s', instance_id)
         return instance_id
 
