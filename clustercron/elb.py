@@ -27,10 +27,10 @@ class Elb(object):
 
     def _get_instance_id(self):
         logger.debug('Get instance ID')
+        instance_id = None
         try:
             resp = requests.get(self.URL_INSTANCE_ID, timeout=self.timeout)
         except Exception as error:
-            instance_id = None
             logger.error('Could not get instance health states: %s', error)
         else:
             instance_id = resp.text
@@ -39,15 +39,16 @@ class Elb(object):
 
     def _get_inst_health_states(self):
         logger.debug('Get instance health states')
+        inst_health_states = []
         try:
             conn = boto.ec2.elb.ELBConnection()
             lb = conn.get_all_load_balancers(
                 load_balancer_names=[self.lb_name])[0]
             inst_health_states = lb.get_instance_health()
-            logger.debug('Instance health states: %s', inst_health_states)
         except Exception as error:
             logger.error('Could not get instance health states: %s', error)
-            inst_health_states = []
+        else:
+            logger.debug('Instance health states: %s', inst_health_states)
         return inst_health_states
 
     def _is_master(self, instance_id, inst_health_states):
