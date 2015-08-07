@@ -4,14 +4,6 @@ clustercron package
 Submodules
 ----------
 
-clustercron.compat module
--------------------------
-
-.. automodule:: clustercron.compat
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 clustercron.elb module
 ----------------------
 
