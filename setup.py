@@ -30,12 +30,14 @@ readme = open('README.rst').read()
 history = open('HISTORY.rst').read().replace('.. :changelog:', '')
 
 requirements = [
+    'requests',
     'boto',
 ]
 
 test_requirements = [
     'pytest',
     'tox',
+    'responses',
 ]
 
 setup(
