@@ -12,14 +12,6 @@ clustercron.elb module
     :undoc-members:
     :show-inheritance:
 
-clustercron.exceptions module
------------------------------
-
-.. automodule:: clustercron.exceptions
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 clustercron.main module
 -----------------------
 
