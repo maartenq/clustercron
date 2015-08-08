@@ -3,6 +3,13 @@
 History
 =======
 
+0.3.6 (2015-08-08)
+------------------
+
+* Add more tests.
+* syslog unix_socket path follows symbolic links (fedora)
+
+
 0.3.5 (2015-08-07)
 ------------------
 
