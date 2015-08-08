@@ -73,11 +73,43 @@ def test_Elb_get_instance_id_returns_None_on_HTTPError():
     assert instance_id is None
 
 
-def test_Elb_get_inst_health_states(monkeypatch):
+def test_get_inst_health_states_returns_empty_list_at_exception(monkeypatch):
     '''
-    Test Elb _get_inst_health_states method.
+    Test Elb `clustercron._get_inst_health_states` returns empty list when some
+    exception is raised.
     '''
-    pass
+    class ELBConnectionMock(object):
+        def get_all_load_balancers(self, load_balancer_names):
+            raise Exception('Some exception')
+
+    monkeypatch.setattr('boto.ec2.elb.ELBConnection', ELBConnectionMock)
+
+    lb = elb.Elb('mylbname')
+    assert lb._get_inst_health_states() == []
+
+
+def test_get_inst_health_states_returns_instance_health_states(monkeypatch):
+    '''
+    Test Elb `clustercron._get_inst_health_states` returns
+    intance_health_states
+    '''
+    instance_health_states = [
+        Inst_health_state('i-cba0ce84', 'InService'),
+        Inst_health_state('i-1d564f5c', 'InService'),
+    ]
+
+    class LoadBalancerMock(object):
+        def get_instance_health(self):
+            return instance_health_states
+
+    class ELBConnectionMock(object):
+        def get_all_load_balancers(self, load_balancer_names):
+            return [LoadBalancerMock()]
+
+    monkeypatch.setattr('boto.ec2.elb.ELBConnection', ELBConnectionMock)
+
+    lb = elb.Elb('mylbname')
+    assert lb._get_inst_health_states() == instance_health_states
 
 
 @pytest.mark.parametrize('instance_id,inst_health_states,is_master', [
@@ -147,8 +179,43 @@ def test_Elb_get_inst_health_states(monkeypatch):
     ),
 ])
 def test_elb_is_master(instance_id, inst_health_states, is_master):
-    print(instance_id, inst_health_states, is_master)
     lb = elb.Elb('mylbname')
     assert lb._is_master(
         instance_id,
         [Inst_health_state(**x) for x in inst_health_states]) == is_master
+
+
+def test_Elb_master_returns_True(monkeypatch):
+    '''
+    Test if `Elb.master` returns True
+    '''
+    instance_health_states = [
+        Inst_health_state('i-cba0ce84', 'InService'),
+        Inst_health_state('i-1d564f5c', 'InService'),
+    ]
+    monkeypatch.setattr(elb.Elb, '_get_instance_id', lambda self: 'i-1d564f5c')
+    monkeypatch.setattr(
+        elb.Elb,
+        '_get_inst_health_states',
+        lambda self: instance_health_states,
+    )
+    lb = elb.Elb('mylbname')
+    assert lb.master is True
+
+
+def test_Elb_master_returns_False(monkeypatch):
+    '''
+    Test if `Elb.master` returns False
+    '''
+    instance_health_states = [
+        Inst_health_state('i-cba0ce84', 'InService'),
+        Inst_health_state('i-1d564f5c', 'InService'),
+    ]
+    monkeypatch.setattr(elb.Elb, '_get_instance_id', lambda self: 'i-cba0ce84')
+    monkeypatch.setattr(
+        elb.Elb,
+        '_get_inst_health_states',
+        lambda self: instance_health_states,
+    )
+    lb = elb.Elb('mylbname')
+    assert lb.master is False
