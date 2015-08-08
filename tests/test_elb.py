@@ -219,3 +219,21 @@ def test_Elb_master_returns_False(monkeypatch):
     )
     lb = elb.Elb('mylbname')
     assert lb.master is False
+
+
+def test_Elb_master_returns_False_when_instance_id_is_None(monkeypatch):
+    '''
+    Test if `Elb.master` returns False when `Elb.instance_id` is None.
+    '''
+    instance_health_states = [
+        Inst_health_state('i-cba0ce84', 'InService'),
+        Inst_health_state('i-1d564f5c', 'InService'),
+    ]
+    monkeypatch.setattr(elb.Elb, '_get_instance_id', lambda self: None)
+    monkeypatch.setattr(
+        elb.Elb,
+        '_get_inst_health_states',
+        lambda self: instance_health_states,
+    )
+    lb = elb.Elb('mylbname')
+    assert lb.master is False
