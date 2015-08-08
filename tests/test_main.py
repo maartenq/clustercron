@@ -22,19 +22,19 @@ def test_clustercron_returns_2_when_master_and_command_exits_2(monkeypatch):
     Test if `main.clustercron` returns 2 when `lb.master` and command exits
     with 2.
     '''
-    class Elb_mocked(object):
+    class ElbMock(object):
         def __init__(self, name):
             self.master = True
 
-    class Popen_mocked(object):
+    class PopenMock(object):
         def __init__(self, command, stdout, stderr):
             self.returncode = 2
 
         def communicate(self):
             return (None, None)
 
-    monkeypatch.setattr(elb, 'Elb', Elb_mocked)
-    monkeypatch.setattr('subprocess.Popen', Popen_mocked)
+    monkeypatch.setattr(elb, 'Elb', ElbMock)
+    monkeypatch.setattr('subprocess.Popen', PopenMock)
 
     assert main.clustercron('elb', 'mylbname', 'a_command') == 2
 
@@ -44,11 +44,11 @@ def test_clustercron_returns_0_when_master_and_command_is_none(monkeypatch):
     Test if `main.clustercron` returns 0 when `lb.master` and `command` is
     None.
     '''
-    class Elb_mocked(object):
+    class ElbMock(object):
         def __init__(self, name):
             self.master = True
 
-    monkeypatch.setattr(elb, 'Elb', Elb_mocked)
+    monkeypatch.setattr(elb, 'Elb', ElbMock)
 
     assert main.clustercron('elb', 'mylbname', None) == 0
 
@@ -57,11 +57,11 @@ def test_clustercron_returns_1_when_not_master(monkeypatch):
     '''
     Test if `main.clustercron` returns 1 when not `lb.master`
     '''
-    class Elb_mocked(object):
+    class ElbMock(object):
         def __init__(self, name):
             self.master = False
 
-    monkeypatch.setattr(elb, 'Elb', Elb_mocked)
+    monkeypatch.setattr(elb, 'Elb', ElbMock)
 
     assert main.clustercron('elb', 'mylbname', None) == 1
 
