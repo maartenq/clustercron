@@ -46,6 +46,7 @@ class Elb(object):
                 load_balancer_names=[self.lb_name])[0]
             inst_health_states = lb.get_instance_health()
         except Exception as error:
+            print(error)
             logger.error('Could not get instance health states: %s', error)
         else:
             logger.debug('Instance health states: %s', inst_health_states)
