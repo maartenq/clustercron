@@ -14,6 +14,7 @@ clustercron --help
         options:
             (-v|--verbose)  Info logging. Add extra `-v` for debug logging.
             (-s|--syslog)   Log to (local) syslog.
+            (-o|--output)   Output stdout and stderr from <cron_command>.
 
     Clustercron is cronjob wrapper that tries to ensure that a script gets run
     only once, on one host from a pool of nodes of a specified loadbalancer.

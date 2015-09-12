@@ -23,7 +23,7 @@ from . import elb
 logger = logging.getLogger(__name__)
 
 
-def clustercron(lb_type, lb_name, command):
+def clustercron(lb_type, lb_name, command, output):
     '''
     API clustercron
 
@@ -42,6 +42,9 @@ def clustercron(lb_type, lb_name, command):
                     stderr=subprocess.PIPE
                 )
                 stdout, stderr = proc.communicate()
+                if output:
+                    print(stdout, file=sys.stdout)
+                    print(stderr, file=sys.stderr)
                 logger.info('stdout: %s', stdout)
                 logger.info('stderr: %s', stderr)
                 logger.info('returncode: %d', proc.returncode)
@@ -63,6 +66,7 @@ class Optarg(object):
         self.args = {
             'version': False,
             'help': False,
+            'output': False,
             'verbose': 0,
             'syslog': False,
             'lb_type': None,
@@ -77,6 +81,7 @@ class Optarg(object):
     options:
         (-v|--verbose)  Info logging. Add extra `-v` for debug logging.
         (-s|--syslog)   Log to (local) syslog.
+        (-o|--output)   Output stdout and stderr from <cron_command>.
 
 Clustercron is cronjob wrapper that tries to ensure that a script gets run
 only once, on one host from a pool of nodes of a specified loadbalancer.
@@ -98,6 +103,8 @@ is the `master` in the cluster and will return 0 if so.
                 break
             if arg == '-v' or arg == '--verbose':
                 self.args['verbose'] += 1
+            if arg == '-o' or arg == '--output':
+                self.args['output'] = True
             if arg == '-s' or arg == '--syslog':
                 self.args['syslog'] = True
             if arg == 'elb':
@@ -167,6 +174,7 @@ def command():
             optarg.args['lb_type'],
             optarg.args['lb_name'],
             optarg.args['command'],
+            optarg.args['output'],
         )
     else:
         print(optarg.usage)
