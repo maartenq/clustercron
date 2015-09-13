@@ -29,26 +29,35 @@ def clustercron(lb_type, lb_name, command, output):
 
     :param lb_type: Type of loadbalancer
     :param lb_name: Name of the loadbalancer instance
-    :param command:  command as a list
+    :param command: Command as a list
+    :param output: Boolean
     '''
     if lb_type == 'elb':
         lb = elb.Elb(lb_name)
         if lb.master:
             if command:
                 logger.info('run command: %s', ' '.join(command))
-                proc = subprocess.Popen(
-                    command,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE
-                )
-                stdout, stderr = proc.communicate()
+                try:
+                    proc = subprocess.Popen(
+                        command,
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.PIPE
+                    )
+                    stdout, stderr = proc.communicate()
+                    return_code = proc.returncode
+                except OSError as error:
+                    stdout = None
+                    stderr = str(error)
+                    return_code = 2
                 if output:
-                    print(stdout, file=sys.stdout)
-                    print(stderr, file=sys.stderr)
+                    if stdout:
+                        print(stdout.strip(), file=sys.stdout)
+                    if stderr:
+                        print(stderr.strip(), file=sys.stderr)
                 logger.info('stdout: %s', stdout)
                 logger.info('stderr: %s', stderr)
-                logger.info('returncode: %d', proc.returncode)
-                return proc.returncode
+                logger.info('returncode: %d', return_code)
+                return return_code
             else:
                 return 0
         else:
