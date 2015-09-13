@@ -6,15 +6,39 @@ from __future__ import print_function
 from __future__ import unicode_literals
 import logging
 import pytest
+import sys
 from clustercron import elb
 from clustercron import main
+
+try:
+        from StringIO import StringIO
+except ImportError:
+        from io import StringIO
+
+
+class ElbMock(object):
+    def __init__(self, name):
+        self.master = True
+
+
+class PopenMock(object):
+    def __init__(self, command, stdout, stderr):
+        self.returncode = 2
+
+    def communicate(self):
+        return ('stdout message', 'stderr message')
 
 
 def test_clustercron_returns_None_when_lb_type_is_not_elb():
     '''
     Test if `main.clustercron` returns None when `lb_type` is not 'elb'.
     '''
-    assert main.clustercron('really_not_elb', 'mylbname', 'command') == None
+    assert main.clustercron(
+        'really_not_elb',
+        'mylbname',
+        'command',
+        False,
+    ) is None
 
 
 def test_clustercron_returns_2_when_master_and_command_exits_2(monkeypatch):
@@ -22,21 +46,10 @@ def test_clustercron_returns_2_when_master_and_command_exits_2(monkeypatch):
     Test if `main.clustercron` returns 2 when `lb.master` and command exits
     with 2.
     '''
-    class ElbMock(object):
-        def __init__(self, name):
-            self.master = True
-
-    class PopenMock(object):
-        def __init__(self, command, stdout, stderr):
-            self.returncode = 2
-
-        def communicate(self):
-            return (None, None)
-
     monkeypatch.setattr(elb, 'Elb', ElbMock)
     monkeypatch.setattr('subprocess.Popen', PopenMock)
 
-    assert main.clustercron('elb', 'mylbname', 'a_command') == 2
+    assert main.clustercron('elb', 'mylbname', 'a_command', False) == 2
 
 
 def test_clustercron_returns_0_when_master_and_command_is_none(monkeypatch):
@@ -44,13 +57,34 @@ def test_clustercron_returns_0_when_master_and_command_is_none(monkeypatch):
     Test if `main.clustercron` returns 0 when `lb.master` and `command` is
     None.
     '''
-    class ElbMock(object):
-        def __init__(self, name):
-            self.master = True
-
     monkeypatch.setattr(elb, 'Elb', ElbMock)
 
-    assert main.clustercron('elb', 'mylbname', None) == 0
+    assert main.clustercron('elb', 'mylbname', None, False) == 0
+
+
+def test_clustercron_returns_0_when_master_output_stderr_stdout(monkeypatch):
+    '''
+    Test if `main.clustercron` returns 0 when `lb.master` and outputs stderr
+    and stdout.
+    '''
+
+    class PopenMock(object):
+        def __init__(self, command, stdout, stderr):
+            self.returncode = 0
+
+        def communicate(self):
+            return ('stdout message', 'stderr message')
+
+    monkeypatch.setattr(elb, 'Elb', ElbMock)
+    monkeypatch.setattr('subprocess.Popen', PopenMock)
+    monkeypatch.setattr('sys.stderr', StringIO())
+    monkeypatch.setattr('sys.stdout', StringIO())
+
+    assert main.clustercron('elb', 'mylbname', ['echo' 'stdout'], True) == 0
+    sys.stdout.seek(0)
+    sys.stderr.seek(0)
+    assert sys.stdout.read().strip() == 'stdout message'
+    assert sys.stderr.read().strip() == 'stderr message'
 
 
 def test_clustercron_returns_1_when_not_master(monkeypatch):
@@ -63,7 +97,7 @@ def test_clustercron_returns_1_when_not_master(monkeypatch):
 
     monkeypatch.setattr(elb, 'Elb', ElbMock)
 
-    assert main.clustercron('elb', 'mylbname', None) == 1
+    assert main.clustercron('elb', 'mylbname', None, False) == 1
 
 
 def test_Optarg_init():
@@ -72,6 +106,7 @@ def test_Optarg_init():
     assert opt_arg_parser.args == {
         'version': False,
         'help': False,
+        'output': False,
         'verbose': 0,
         'lb_type': None,
         'lb_name': None,
@@ -90,6 +125,7 @@ def test_opt_arg_parser_usage():
     options:
         (-v|--verbose)  Info logging. Add extra `-v` for debug logging.
         (-s|--syslog)   Log to (local) syslog.
+        (-o|--output)   Output stdout and stderr from <cron_command>.
 
 Clustercron is cronjob wrapper that tries to ensure that a script gets run
 only once, on one host from a pool of nodes of a specified loadbalancer.
@@ -105,6 +141,7 @@ is the `master` in the cluster and will return 0 if so.
         {
             'version': False,
             'help': False,
+            'output': False,
             'verbose': 0,
             'lb_type': None,
             'lb_name': None,
@@ -117,6 +154,7 @@ is the `master` in the cluster and will return 0 if so.
         {
             'version': False,
             'help': True,
+            'output': False,
             'verbose': 0,
             'lb_type': None,
             'lb_name': None,
@@ -129,6 +167,7 @@ is the `master` in the cluster and will return 0 if so.
         {
             'version': False,
             'help': True,
+            'output': False,
             'verbose': 0,
             'lb_type': None,
             'lb_name': None,
@@ -141,6 +180,7 @@ is the `master` in the cluster and will return 0 if so.
         {
             'version': False,
             'help': True,
+            'output': False,
             'verbose': 0,
             'lb_type': None,
             'lb_name': None,
@@ -153,6 +193,7 @@ is the `master` in the cluster and will return 0 if so.
         {
             'version': False,
             'help': True,
+            'output': False,
             'verbose': 0,
             'lb_type': None,
             'lb_name': None,
@@ -165,6 +206,7 @@ is the `master` in the cluster and will return 0 if so.
         {
             'version': True,
             'help': False,
+            'output': False,
             'verbose': 0,
             'lb_type': None,
             'lb_name': None,
@@ -177,6 +219,7 @@ is the `master` in the cluster and will return 0 if so.
         {
             'version': True,
             'help': False,
+            'output': False,
             'verbose': 0,
             'lb_type': None,
             'lb_name': None,
@@ -189,6 +232,7 @@ is the `master` in the cluster and will return 0 if so.
         {
             'version': False,
             'help': False,
+            'output': False,
             'verbose': 1,
             'lb_type': 'elb',
             'lb_name': 'my_lb_name',
@@ -201,6 +245,7 @@ is the `master` in the cluster and will return 0 if so.
         {
             'version': False,
             'help': False,
+            'output': False,
             'verbose': 2,
             'lb_type': 'elb',
             'lb_name': 'my_lb_name',
@@ -213,6 +258,7 @@ is the `master` in the cluster and will return 0 if so.
         {
             'version': False,
             'help': False,
+            'output': False,
             'verbose': 0,
             'lb_type': 'elb',
             'lb_name': 'my_lb_name',
@@ -225,6 +271,7 @@ is the `master` in the cluster and will return 0 if so.
         {
             'version': False,
             'help': False,
+            'output': False,
             'verbose': 0,
             'lb_type': 'elb',
             'lb_name': 'my_lb_name',
@@ -237,6 +284,7 @@ is the `master` in the cluster and will return 0 if so.
         {
             'version': False,
             'help': False,
+            'output': False,
             'verbose': 0,
             'lb_type': 'elb',
             'lb_name': None,
@@ -249,6 +297,7 @@ is the `master` in the cluster and will return 0 if so.
         {
             'version': False,
             'help': False,
+            'output': False,
             'verbose': 0,
             'lb_type': 'elb',
             'lb_name': None,
@@ -261,6 +310,7 @@ is the `master` in the cluster and will return 0 if so.
         {
             'version': False,
             'help': False,
+            'output': False,
             'verbose': 0,
             'lb_type': 'elb',
             'lb_name': 'my_lb_name',
@@ -273,7 +323,21 @@ is the `master` in the cluster and will return 0 if so.
         {
             'version': False,
             'help': False,
+            'output': False,
             'verbose': 2,
+            'lb_type': 'elb',
+            'lb_name': 'my_lb_name',
+            'command': ['test', '-v'],
+            'syslog': True,
+        }
+    ),
+    (
+        ['-o', '-s', 'elb', 'my_lb_name', 'test', '-v'],
+        {
+            'version': False,
+            'help': False,
+            'output': True,
+            'verbose': 0,
             'lb_type': 'elb',
             'lb_name': 'my_lb_name',
             'command': ['test', '-v'],
@@ -308,7 +372,7 @@ def test_command_elb_lb_name_a_command_arguments(monkeypatch):
     monkeypatch.setattr(
         main,
         'clustercron',
-        lambda lb_type, lb_name, commmand: 0
+        lambda lb_type, lb_name, commmand, output: 0
     )
     assert main.command() == 0
 
@@ -332,7 +396,7 @@ def test_command_nosense(monkeypatch):
         (2, True, logging.DEBUG),
 
     ]
- )
+)
 def test_setup_logging_level(verbose, syslog, log_level):
     main.setup_logging(verbose, syslog)
     logger = logging.getLogger()

@@ -23,29 +23,41 @@ from . import elb
 logger = logging.getLogger(__name__)
 
 
-def clustercron(lb_type, lb_name, command):
+def clustercron(lb_type, lb_name, command, output):
     '''
     API clustercron
 
     :param lb_type: Type of loadbalancer
     :param lb_name: Name of the loadbalancer instance
-    :param command:  command as a list
+    :param command: Command as a list
+    :param output: Boolean
     '''
     if lb_type == 'elb':
         lb = elb.Elb(lb_name)
         if lb.master:
             if command:
                 logger.info('run command: %s', ' '.join(command))
-                proc = subprocess.Popen(
-                    command,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE
-                )
-                stdout, stderr = proc.communicate()
+                try:
+                    proc = subprocess.Popen(
+                        command,
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.PIPE
+                    )
+                    stdout, stderr = proc.communicate()
+                    return_code = proc.returncode
+                except OSError as error:
+                    stdout = None
+                    stderr = str(error)
+                    return_code = 2
+                if output:
+                    if stdout:
+                        print(stdout.strip(), file=sys.stdout)
+                    if stderr:
+                        print(stderr.strip(), file=sys.stderr)
                 logger.info('stdout: %s', stdout)
                 logger.info('stderr: %s', stderr)
-                logger.info('returncode: %d', proc.returncode)
-                return proc.returncode
+                logger.info('returncode: %d', return_code)
+                return return_code
             else:
                 return 0
         else:
@@ -63,6 +75,7 @@ class Optarg(object):
         self.args = {
             'version': False,
             'help': False,
+            'output': False,
             'verbose': 0,
             'syslog': False,
             'lb_type': None,
@@ -77,6 +90,7 @@ class Optarg(object):
     options:
         (-v|--verbose)  Info logging. Add extra `-v` for debug logging.
         (-s|--syslog)   Log to (local) syslog.
+        (-o|--output)   Output stdout and stderr from <cron_command>.
 
 Clustercron is cronjob wrapper that tries to ensure that a script gets run
 only once, on one host from a pool of nodes of a specified loadbalancer.
@@ -98,6 +112,8 @@ is the `master` in the cluster and will return 0 if so.
                 break
             if arg == '-v' or arg == '--verbose':
                 self.args['verbose'] += 1
+            if arg == '-o' or arg == '--output':
+                self.args['output'] = True
             if arg == '-s' or arg == '--syslog':
                 self.args['syslog'] = True
             if arg == 'elb':
@@ -167,6 +183,7 @@ def command():
             optarg.args['lb_type'],
             optarg.args['lb_name'],
             optarg.args['command'],
+            optarg.args['output'],
         )
     else:
         print(optarg.usage)

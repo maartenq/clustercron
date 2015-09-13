@@ -3,6 +3,12 @@
 History
 =======
 
+0.3.7.dev1 (2015-09-12)
+------------------
+
+* Added option '-o' '--output' for output of wrapped 'cron command'.
+
+
 0.3.6 (2015-08-08)
 ------------------
 
