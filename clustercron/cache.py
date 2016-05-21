@@ -8,12 +8,12 @@ clustercron.cache
 '''
 
 from __future__ import unicode_literals
-
 import fcntl
 import io
 import json
 import logging
 import logging.handlers
+import sys
 import time
 import random
 
@@ -21,10 +21,17 @@ from datetime import datetime
 from datetime import timedelta
 
 
+if sys.version_info < (3,):
+    text_type = unicode
+    binary_type = str
+else:
+    text_type = str
+    binary_type = bytes
+
 logger = logging.getLogger(__name__)
 
 
-class Cache(dict):
+class Cache(object):
     def __init__(self):
         self.master = False
         self.dct = {
@@ -60,7 +67,7 @@ class Cache(dict):
 
     def safe_json(self, fp):
         fp.write(
-            unicode(
+            text_type(
                 json.dumps(
                     self.dct,
                     default=self.json_serial,

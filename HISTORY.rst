@@ -3,6 +3,12 @@
 History
 =======
 
+0.4.1 (2016-05-21)
+------------------
+
+* Fixed Python3 unicode compatibility issue for json module.
+
+
 0.4.0 (2016-05-21)
 ------------------
 
