@@ -8,22 +8,25 @@ clustercron.main
 '''
 
 
-from __future__ import print_function
 from __future__ import unicode_literals
+from __future__ import print_function
 import logging
 import os
+import os.path
 import stat
 import sys
 import subprocess
 from . import __version__
 from . import elb
+from . import cache
+from . import config
 
 
 # general libary logging
 logger = logging.getLogger(__name__)
 
 
-def clustercron(lb_type, lb_name, command, output):
+def clustercron(lb_type, lb_name, command, output, use_cache):
     '''
     API clustercron
 
@@ -34,7 +37,11 @@ def clustercron(lb_type, lb_name, command, output):
     '''
     if lb_type == 'elb':
         lb = elb.Elb(lb_name)
-        if lb.master:
+        if use_cache:
+            master = cache.check(lb.master, **config.cache)
+        else:
+            master = lb.master()
+        if master:
             if command:
                 logger.info('run command: %s', ' '.join(command))
                 try:
@@ -78,6 +85,7 @@ class Optarg(object):
             'output': False,
             'verbose': 0,
             'syslog': False,
+            'cache': False,
             'lb_type': None,
             'lb_name': None,
             'command': [],
@@ -90,6 +98,7 @@ class Optarg(object):
     options:
         (-v|--verbose)  Info logging. Add extra `-v` for debug logging.
         (-s|--syslog)   Log to (local) syslog.
+        (-c|--cache)    Cache output from master check.
         (-o|--output)   Output stdout and stderr from <cron_command>.
 
 Clustercron is cronjob wrapper that tries to ensure that a script gets run
@@ -116,6 +125,8 @@ is the `master` in the cluster and will return 0 if so.
                 self.args['output'] = True
             if arg == '-s' or arg == '--syslog':
                 self.args['syslog'] = True
+            if arg == '-c' or arg == '--cache':
+                self.args['cache'] = True
             if arg == 'elb':
                 self.args['lb_type'] = arg
                 try:
@@ -184,6 +195,7 @@ def command():
             optarg.args['lb_name'],
             optarg.args['command'],
             optarg.args['output'],
+            optarg.args['cache'],
         )
     else:
         print(optarg.usage)

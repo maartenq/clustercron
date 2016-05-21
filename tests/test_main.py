@@ -18,7 +18,10 @@ except ImportError:
 
 class ElbMock(object):
     def __init__(self, name):
-        self.master = True
+        pass
+
+    def master(self):
+        return True
 
 
 class PopenMock(object):
@@ -38,6 +41,7 @@ def test_clustercron_returns_None_when_lb_type_is_not_elb():
         'mylbname',
         'command',
         False,
+        False,
     ) is None
 
 
@@ -49,7 +53,7 @@ def test_clustercron_returns_2_when_master_and_command_exits_2(monkeypatch):
     monkeypatch.setattr(elb, 'Elb', ElbMock)
     monkeypatch.setattr('subprocess.Popen', PopenMock)
 
-    assert main.clustercron('elb', 'mylbname', 'a_command', False) == 2
+    assert main.clustercron('elb', 'mylbname', 'a_command', False, False) == 2
 
 
 def test_clustercron_returns_0_when_master_and_command_is_none(monkeypatch):
@@ -59,7 +63,7 @@ def test_clustercron_returns_0_when_master_and_command_is_none(monkeypatch):
     '''
     monkeypatch.setattr(elb, 'Elb', ElbMock)
 
-    assert main.clustercron('elb', 'mylbname', None, False) == 0
+    assert main.clustercron('elb', 'mylbname', None, False, False) == 0
 
 
 def test_clustercron_returns_0_when_master_output_stderr_stdout(monkeypatch):
@@ -80,7 +84,8 @@ def test_clustercron_returns_0_when_master_output_stderr_stdout(monkeypatch):
     monkeypatch.setattr('sys.stderr', StringIO())
     monkeypatch.setattr('sys.stdout', StringIO())
 
-    assert main.clustercron('elb', 'mylbname', ['echo' 'stdout'], True) == 0
+    assert main.clustercron('elb', 'mylbname', ['echo' 'stdout'], True,
+                            False) == 0
     sys.stdout.seek(0)
     sys.stderr.seek(0)
     assert sys.stdout.read().strip() == 'stdout message'
@@ -93,11 +98,14 @@ def test_clustercron_returns_1_when_not_master(monkeypatch):
     '''
     class ElbMock(object):
         def __init__(self, name):
-            self.master = False
+            pass
+
+        def master(self):
+            return False
 
     monkeypatch.setattr(elb, 'Elb', ElbMock)
 
-    assert main.clustercron('elb', 'mylbname', None, False) == 1
+    assert main.clustercron('elb', 'mylbname', None, False, False) == 1
 
 
 def test_Optarg_init():
@@ -112,6 +120,7 @@ def test_Optarg_init():
         'lb_name': None,
         'command': [],
         'syslog': False,
+        'cache': False,
     }
 
 
@@ -125,6 +134,7 @@ def test_opt_arg_parser_usage():
     options:
         (-v|--verbose)  Info logging. Add extra `-v` for debug logging.
         (-s|--syslog)   Log to (local) syslog.
+        (-c|--cache)    Cache output from master check.
         (-o|--output)   Output stdout and stderr from <cron_command>.
 
 Clustercron is cronjob wrapper that tries to ensure that a script gets run
@@ -147,6 +157,7 @@ is the `master` in the cluster and will return 0 if so.
             'lb_name': None,
             'command': [],
             'syslog': False,
+            'cache': False,
         }
     ),
     (
@@ -160,6 +171,7 @@ is the `master` in the cluster and will return 0 if so.
             'lb_name': None,
             'command': [],
             'syslog': False,
+            'cache': False,
         }
     ),
     (
@@ -173,6 +185,7 @@ is the `master` in the cluster and will return 0 if so.
             'lb_name': None,
             'command': [],
             'syslog': False,
+            'cache': False,
         }
     ),
     (
@@ -186,6 +199,7 @@ is the `master` in the cluster and will return 0 if so.
             'lb_name': None,
             'command': [],
             'syslog': False,
+            'cache': False,
         }
     ),
     (
@@ -199,6 +213,7 @@ is the `master` in the cluster and will return 0 if so.
             'lb_name': None,
             'command': [],
             'syslog': False,
+            'cache': False,
         }
     ),
     (
@@ -212,6 +227,7 @@ is the `master` in the cluster and will return 0 if so.
             'lb_name': None,
             'command': [],
             'syslog': False,
+            'cache': False,
         }
     ),
     (
@@ -225,6 +241,7 @@ is the `master` in the cluster and will return 0 if so.
             'lb_name': None,
             'command': [],
             'syslog': False,
+            'cache': False,
         }
     ),
     (
@@ -238,6 +255,7 @@ is the `master` in the cluster and will return 0 if so.
             'lb_name': 'my_lb_name',
             'command': ['update', '-r', 'thing'],
             'syslog': False,
+            'cache': False,
         }
     ),
     (
@@ -251,6 +269,7 @@ is the `master` in the cluster and will return 0 if so.
             'lb_name': 'my_lb_name',
             'command': ['update', '-r', 'thing'],
             'syslog': False,
+            'cache': False,
         }
     ),
     (
@@ -264,6 +283,7 @@ is the `master` in the cluster and will return 0 if so.
             'lb_name': 'my_lb_name',
             'command': ['update', '-r', 'thing'],
             'syslog': False,
+            'cache': False,
         }
     ),
     (
@@ -277,6 +297,7 @@ is the `master` in the cluster and will return 0 if so.
             'lb_name': 'my_lb_name',
             'command': [],
             'syslog': False,
+            'cache': False,
         }
     ),
     (
@@ -290,6 +311,7 @@ is the `master` in the cluster and will return 0 if so.
             'lb_name': None,
             'command': [],
             'syslog': False,
+            'cache': False,
         }
     ),
     (
@@ -303,6 +325,7 @@ is the `master` in the cluster and will return 0 if so.
             'lb_name': None,
             'command': [],
             'syslog': False,
+            'cache': False,
         }
     ),
     (
@@ -316,6 +339,7 @@ is the `master` in the cluster and will return 0 if so.
             'lb_name': 'my_lb_name',
             'command': [],
             'syslog': False,
+            'cache': False,
         }
     ),
     (
@@ -329,6 +353,7 @@ is the `master` in the cluster and will return 0 if so.
             'lb_name': 'my_lb_name',
             'command': ['test', '-v'],
             'syslog': True,
+            'cache': False,
         }
     ),
     (
@@ -342,6 +367,7 @@ is the `master` in the cluster and will return 0 if so.
             'lb_name': 'my_lb_name',
             'command': ['test', '-v'],
             'syslog': True,
+            'cache': False,
         }
     ),
 ])
@@ -372,7 +398,7 @@ def test_command_elb_lb_name_a_command_arguments(monkeypatch):
     monkeypatch.setattr(
         main,
         'clustercron',
-        lambda lb_type, lb_name, commmand, output: 0
+        lambda lb_type, lb_name, commmand, output, cache: 0
     )
     assert main.command() == 0
 

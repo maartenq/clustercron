@@ -4,6 +4,22 @@ clustercron package
 Submodules
 ----------
 
+clustercron.cache module
+------------------------
+
+.. automodule:: clustercron.cache
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+clustercron.config module
+-------------------------
+
+.. automodule:: clustercron.config
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 clustercron.elb module
 ----------------------
 

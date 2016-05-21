@@ -3,8 +3,14 @@
 History
 =======
 
-0.3.7.dev1 (2015-09-12)
+0.4.0 (2016-05-21)
 ------------------
+
+* Added Caching of *master selection*.
+
+
+0.3.7.dev1 (2015-09-12)
+-----------------------
 
 * Added option '-o' '--output' for output of wrapped 'cron command'.
 

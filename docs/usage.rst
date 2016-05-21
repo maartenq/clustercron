@@ -1,3 +1,5 @@
+.. _usage:
+
 Usage
 =====
 
@@ -6,6 +8,7 @@ clustercron --help
 ::
 
     $ clustercron --help
+
     usage:
         clustercron [options] elb <loadbalancer_name> [<cron_command>]
         clustercron --version
@@ -14,6 +17,7 @@ clustercron --help
         options:
             (-v|--verbose)  Info logging. Add extra `-v` for debug logging.
             (-s|--syslog)   Log to (local) syslog.
+            (-c|--cache)    Cache output from master check.
             (-o|--output)   Output stdout and stderr from <cron_command>.
 
     Clustercron is cronjob wrapper that tries to ensure that a script gets run
@@ -151,4 +155,20 @@ the node that will be picked master . Log with level INFO to syslog::
 
     55 23 * * * /<path>/<to>/<virtualenv_name>/bin/clustercron -v -s elb <lb name> logger "clustercron run"
 
+
+Caching
+-------
+
+**Clustercron's** *master selection* can be cached with the options  `-c` or `--cache`::
+
+    $ clustercron -c elb mylbname echo test
+
+
+By default the cache will stored in `/tmp/clustercron_cache.json` and expire
+after 59 seconds. **Clustercron** will lock the cache file and tries to by default
+20 times when the file is locked.
+
+The defaults for caching can only be altered in **Clustercron's** configuration file.
+
+See :ref:`configuration` for more information.
 

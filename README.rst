@@ -15,8 +15,10 @@ Clustercron
         :target: https://codecov.io/github/maartenq/clustercron?branch=master
 
 
-Clustercron is cronjob wrapper that tries to ensure that a script gets run only
-once, on one host from a pool of nodes of a specified loadbalancer.
+**Clustercron** is cronjob wrapper that tries to ensure that a script gets run
+only once, on one host from a pool of nodes of a specified loadbalancer.
+**Clustercon** select a *master* from all nodes and will run the cronjob only
+on that node.
 
 Supported load balancers (till now):
 

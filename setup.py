@@ -1,33 +1,20 @@
 #!/usr/bin/env python
+# setup.py
 # -*- coding: utf-8 -*-
-
-import sys
-from setuptools import setup
-from setuptools.command.test import test as TestCommand
-from clustercron import __version__
+# vim: ai et ts=4 sw=4 sts=4 fenc=UTF-8 ft=python
 
 
-class PyTest(TestCommand):
-    user_options = [('pytest-args=', 'a', 'Arguments to pass to py.test')]
-
-    def initialize_options(self):
-        TestCommand.initialize_options(self)
-        self.pytest_args = []
-
-    def finalize_options(self):
-        TestCommand.finalize_options(self)
-        self.test_args = []
-        self.test_suite = True
-
-    def run_tests(self):
-        # import here, cause outside the eggs aren't loaded
-        import pytest
-        errno = pytest.main(self.pytest_args)
-        sys.exit(errno)
+try:
+    from setuptools import setup
+except ImportError:
+    from distutils.core import setup
 
 
-readme = open('README.rst').read()
-history = open('HISTORY.rst').read().replace('.. :changelog:', '')
+with open('README.rst') as readme_file:
+    readme = readme_file.read()
+
+with open('HISTORY.rst') as history_file:
+    history = history_file.read()
 
 requirements = [
     'requests',
@@ -40,9 +27,13 @@ test_requirements = [
     'responses',
 ]
 
+setup_requirements = [
+    'pytest-runner',
+]
+
 setup(
     name='clustercron',
-    version=__version__,
+    version='0.3.7',
     description='Cron job wrapper that ensures a script gets run from one node'
     ' in the cluster.',
     long_description=readme + '\n\n' + history,
@@ -67,7 +58,7 @@ setup(
         'Development Status :: 4 - Beta',
         'Environment :: Console',
         'Intended Audience :: System Administrators',
-        'License :: OSI Approved :: BSD License',
+        'License :: OSI Approved :: ISC License (ISCL)',
         'Natural Language :: English',
         'Operating System :: POSIX',
         'Programming Language :: Python :: 2',
@@ -76,10 +67,11 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
         'Topic :: Documentation :: Sphinx',
         'Topic :: Utilities',
     ],
     test_suite='tests',
-    cmdclass={'test': PyTest},
-    tests_require=test_requirements
+    tests_require=test_requirements,
+    setup_requires=setup_requirements,
 )

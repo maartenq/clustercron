@@ -10,6 +10,7 @@ Contents:
    readme
    elb
    installation
+   configuration
    usage
    modules
    contributing

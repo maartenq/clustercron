@@ -75,7 +75,6 @@ class Elb(object):
         logger.info('This instance master: %s', res)
         return res
 
-    @property
     def master(self):
         instance_id = self._get_instance_id()
         if instance_id:

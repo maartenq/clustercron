@@ -200,7 +200,7 @@ def test_Elb_master_returns_True(monkeypatch):
         lambda self: instance_health_states,
     )
     lb = elb.Elb('mylbname')
-    assert lb.master is True
+    assert lb.master() is True
 
 
 def test_Elb_master_returns_False(monkeypatch):
@@ -218,7 +218,7 @@ def test_Elb_master_returns_False(monkeypatch):
         lambda self: instance_health_states,
     )
     lb = elb.Elb('mylbname')
-    assert lb.master is False
+    assert lb.master() is False
 
 
 def test_Elb_master_returns_False_when_instance_id_is_None(monkeypatch):
@@ -236,4 +236,4 @@ def test_Elb_master_returns_False_when_instance_id_is_None(monkeypatch):
         lambda self: instance_health_states,
     )
     lb = elb.Elb('mylbname')
-    assert lb.master is False
+    assert lb.master() is False
