@@ -22,11 +22,8 @@ from datetime import timedelta
 
 
 if sys.version_info < (3,):
-    try:
-        text_type = unicode
-        binary_type = str
-    except Exception:
-        pass
+    text_type = unicode  # NOQA
+    binary_type = str
 else:
     text_type = str
     binary_type = bytes
