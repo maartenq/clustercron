@@ -33,7 +33,7 @@ setup_requirements = [
 
 setup(
     name='clustercron',
-    version='0.4.0',
+    version='0.4.1',
     description='Cron job wrapper that ensures a script gets run from one node'
     ' in the cluster.',
     long_description=readme + '\n\n' + history,
