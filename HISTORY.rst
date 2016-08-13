@@ -3,6 +3,14 @@
 History
 =======
 
+0.4.5 (2016-08-13)
+------------------
+
+* Added pyup.io
+* ISC License
+* pinned requirements
+
+
 0.4.4 (2016-05-27)
 ------------------
 
