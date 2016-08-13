@@ -3,4 +3,4 @@
 
 __author__ = 'Maarten Diemel'
 __email__ = 'maarten@maartendiemel.nl'
-__version__ = '0.4.5'
+__version__ = '0.4.6'
