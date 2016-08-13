@@ -9,6 +9,6 @@ sphinx-rtd-theme
 twine
 yolk
 ipython
-PyYAML
+PyYAML==3.11
 pytest
 pytest-cov
