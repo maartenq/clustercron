@@ -7,7 +7,7 @@ coverage
 Sphinx
 sphinx-rtd-theme
 twine
-yolk
+yolk==0.4.3
 ipython
 PyYAML==3.11
 pytest
