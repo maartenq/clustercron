@@ -8,7 +8,7 @@ Sphinx==1.4.5
 sphinx-rtd-theme
 twine
 yolk==0.4.3
-ipython
+ipython==5.1.0
 PyYAML==3.11
 pytest==2.9.2
 pytest-cov==2.3.1
