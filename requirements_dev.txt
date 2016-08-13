@@ -10,5 +10,5 @@ twine
 yolk==0.4.3
 ipython
 PyYAML==3.11
-pytest
+pytest==2.9.2
 pytest-cov==2.3.1
