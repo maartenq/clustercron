@@ -30,7 +30,7 @@ with open('HISTORY.rst') as history_file:
 
 requirements = [
     'boto==2.42.0',
-    'requests==2.11.0',
+    'requests==2.11.1',
 ]
 
 test_requirements = [
