@@ -60,7 +60,7 @@ setup(
     },
     include_package_data=True,
     install_requires=requirements,
-    license='BSD',
+    license="ISC license",
     zip_safe=False,
     keywords='clustercron',
     classifiers=[
