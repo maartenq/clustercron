@@ -3,23 +3,7 @@
 # -*- coding: utf-8 -*-
 # vim: ai et ts=4 sw=4 sts=4 fenc=UTF-8 ft=python
 
-import sys
 from setuptools import setup
-from setuptools.command.test import test as TestCommand
-
-
-class PyTest(TestCommand):
-    user_options = [('pytest-args=', 'a', "Arguments to pass to py.test")]
-
-    def initialize_options(self):
-        TestCommand.initialize_options(self)
-        self.pytest_args = []
-
-    def run_tests(self):
-        # Import here, cause outside the eggs aren't loaded
-        import pytest
-        errno = pytest.main(self.pytest_args)
-        sys.exit(errno)
 
 
 with open('README.rst') as readme_file:
@@ -29,15 +13,15 @@ with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
 requirements = [
-    'boto==2.42.0',
-    'requests==2.11.1',
+    'boto',
+    'requests',
 ]
 
 test_requirements = [
-    'pytest==3.0.0',
-    'pytest-cov==2.3.1',
-    'responses==0.5.1',
-    'tox==2.3.1',
+    'pytest>=3.0.1',
+    'pytest-cov>=2.3.1',
+    'responses>=0.5.1',
+    'tox>=2.3.1',
 ]
 
 setup(
@@ -82,5 +66,4 @@ setup(
     ],
     test_suite='tests',
     tests_require=test_requirements,
-    cmdclass={'test': PyTest},
 )
