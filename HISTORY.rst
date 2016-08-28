@@ -4,6 +4,13 @@
 History
 =======
 
+0.4.9 (2016-08-28)
+------------------
+
+* Update requirements
+* Removed pinned requirements from setup.py
+
+
 0.4.8 (2016-08-20)
 ------------------
 
