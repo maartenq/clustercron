@@ -1,4 +1,4 @@
-Sphinx==1.4.5
+Sphinx==1.4.7
 boto==2.42.0
 bumpversion==0.5.3
 coverage==4.2
