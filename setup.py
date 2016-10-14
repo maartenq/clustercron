@@ -18,10 +18,10 @@ requirements = [
 ]
 
 test_requirements = [
-    'pytest>=3.0.1',
-    'pytest-cov>=2.3.1',
+    'pytest>=3.0.3',
+    'pytest-cov>=2.4.0',
     'responses>=0.5.1',
-    'tox>=2.3.1',
+    'tox>=2.4.1',
 ]
 
 setup(
