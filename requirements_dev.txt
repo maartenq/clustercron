@@ -1,10 +1,10 @@
-Sphinx==1.4.5
+Sphinx==1.4.8
 boto==2.42.0
 bumpversion==0.5.3
 coverage==4.2
 flake8==3.0.4
 pytest-cov==2.4.0
-pytest==3.0.1
+pytest==3.0.3
 requests==2.11.1
 responses==0.5.1
 sphinx-rtd-theme==0.1.9
