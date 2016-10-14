@@ -4,6 +4,13 @@
 History
 =======
 
+0.4.10 (2016-10-14)
+------------------
+
+* Updated dev requirements
+* Updated test requirements in setup.py
+
+
 0.4.9 (2016-08-28)
 ------------------
 
