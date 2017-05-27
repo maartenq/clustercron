@@ -9,5 +9,5 @@ requests==2.11.1
 responses==0.5.1
 sphinx-rtd-theme==0.1.9
 tox==2.4.1
-twine==1.8.1
+twine==1.9.1
 watchdog==0.8.3
