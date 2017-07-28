@@ -2,7 +2,7 @@ Sphinx==1.4.8
 boto==2.42.0
 bumpversion==0.5.3
 coverage==4.2
-flake8==3.0.4
+flake8==3.4.1
 pytest-cov==2.4.0
 pytest==3.0.3
 requests==2.11.1
