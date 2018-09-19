@@ -13,10 +13,6 @@ Clustercron
         :target: https://clustercron.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
-.. image:: https://pyup.io/repos/github/maartenq/clustercron/shield.svg
-     :target: https://pyup.io/repos/github/maartenq/clustercron/
-     :alt: Updates
-
 .. image:: https://codecov.io/github/maartenq/clustercron/coverage.svg?branch=master
         :target: https://codecov.io/github/maartenq/clustercron?branch=master
 
