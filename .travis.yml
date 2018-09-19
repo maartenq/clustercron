@@ -1,15 +1,13 @@
 # .travis.yml
-# -*- coding: utf-8 -*-
-# vim: ai et sw=2 ts=2 sts=2 fenc=UTF-8 ft=yaml
+# vim: ai et ts=4 sw=4 sts=4 ft=yaml fileencoding=UTF-8
 
 language: python
-python: 3.5
+python: 3.6
 env:
+  - TOXENV=py36
   - TOXENV=py35
   - TOXENV=py34
-  - TOXENV=py33
   - TOXENV=py27
-  - TOXENV=py26
   - TOXENV=docs
   - TOXENV=flake8
 
