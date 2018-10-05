@@ -39,6 +39,7 @@ def _update_config_from_conf():
                 except configparser.NoSectionError:
                     pass
 
+
 _update_config_from_conf()
 for key, value in _config.items():
     globals()[key] = value
