@@ -1,16 +1,11 @@
-# clustercron/config.py
+# clustercron/_CONFIG.py
 # vim: ts=4 et sw=4 sts=4 ft=python fenc=UTF-8 ai
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
 import os.path
+import configparser
 
-try:
-    import ConfigParser as configparser
-except ImportError:
-    import configparser
-
-_config = {
+_CONFIG = {
     'cache': {
         'filename': '/tmp/clustercron_cache.json',
         'expire_time': 59,
@@ -32,8 +27,8 @@ def _update_config_from_conf():
                 try:
                     for key, value in parser.items(section):
                         try:
-                            if _config[section].get(key, None) is not None:
-                                _config[section][key] = value
+                            if _CONFIG[section].get(key, None) is not None:
+                                _CONFIG[section][key] = value
                         except AttributeError:
                             break
                 except configparser.NoSectionError:
@@ -41,5 +36,5 @@ def _update_config_from_conf():
 
 
 _update_config_from_conf()
-for key, value in _config.items():
+for key, value in _CONFIG.items():
     globals()[key] = value

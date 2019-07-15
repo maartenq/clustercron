@@ -23,7 +23,7 @@ from . import config
 
 
 # general libary logging
-logger = logging.getLogger(__name__)
+LOGGER = logging.getLogger(__name__)
 
 
 def clustercron(lb_type, lb_name, command, output, use_cache):
@@ -43,7 +43,7 @@ def clustercron(lb_type, lb_name, command, output, use_cache):
             master = lb.master()
         if master:
             if command:
-                logger.info('run command: %s', ' '.join(command))
+                LOGGER.info('run command: %s', ' '.join(command))
                 try:
                     proc = subprocess.Popen(
                         command,
@@ -61,9 +61,9 @@ def clustercron(lb_type, lb_name, command, output, use_cache):
                         print(stdout.strip(), file=sys.stdout)
                     if stderr:
                         print(stderr.strip(), file=sys.stderr)
-                logger.info('stdout: %s', stdout)
-                logger.info('stderr: %s', stderr)
-                logger.info('returncode: %d', return_code)
+                LOGGER.info('stdout: %s', stdout)
+                LOGGER.info('stderr: %s', stderr)
+                LOGGER.info('returncode: %d', return_code)
                 return return_code
             else:
                 return 0
@@ -71,7 +71,7 @@ def clustercron(lb_type, lb_name, command, output, use_cache):
             return 1
 
 
-class Optarg(object):
+class Optarg():
     '''
     Parse arguments from `sys.argv[0]` list.
     Set usage string.
@@ -113,19 +113,19 @@ is the `master` in the cluster and will return 0 if so.
         arg_list.reverse()
         while arg_list:
             arg = arg_list.pop()
-            if arg == '-h' or arg == '--help':
+            if arg in ('-h', '--help'):
                 self.args['help'] = True
                 break
             if arg == '--version':
                 self.args['version'] = True
                 break
-            if arg == '-v' or arg == '--verbose':
+            if arg in ('-v', '--verbose'):
                 self.args['verbose'] += 1
-            if arg == '-o' or arg == '--output':
+            if arg in ('-o', '--output'):
                 self.args['output'] = True
-            if arg == '-s' or arg == '--syslog':
+            if arg in ('-s', '--syslog'):
                 self.args['syslog'] = True
-            if arg == '-c' or arg == '--cache':
+            if arg in ('-c', '--cache'):
                 self.args['cache'] = True
             if arg == 'elb':
                 self.args['lb_type'] = arg
@@ -140,19 +140,19 @@ is the `master` in the cluster and will return 0 if so.
             self.args['lb_name'] = None
         if self.args['command'] and self.args['command'][0].startswith('-'):
             self.args['command'] = []
-        logger.debug('verbose: %s', self.args['verbose'])
+        LOGGER.debug('verbose: %s', self.args['verbose'])
 
 
 def setup_logging(verbose, syslog):
     '''
     Sets up logging.
     '''
-    logger = logging.getLogger()
+    LOGGER = logging.getLogger()
     # Make sure no handlers hangin' round
-    [handler.close() for handler in logger.handlers]
-    logger.handlers = []
-    # root logger logs all
-    logger.setLevel(logging.DEBUG)
+    [handler.close() for handler in LOGGER.handlers]
+    LOGGER.handlers = []
+    # root LOGGER logs all
+    LOGGER.setLevel(logging.DEBUG)
     # Get log level for handlers
     if verbose > 1:
         log_level = logging.DEBUG
@@ -164,8 +164,8 @@ def setup_logging(verbose, syslog):
     formatter = logging.Formatter(fmt='%(levelname)-8s %(name)s : %(message)s')
     if syslog:
         unix_socket = {
-            'linux2': os.path.realpath(b'/dev/log'),
-            'darwin': os.path.realpath(b'/var/run/syslog'),
+            'linux2': os.path.realpath('/dev/log'),
+            'darwin': os.path.realpath('/var/run/syslog'),
         }.get(sys.platform, '')
         if os.path.exists(unix_socket) and \
                 stat.S_ISSOCK(os.stat(unix_socket).st_mode):
@@ -175,10 +175,10 @@ def setup_logging(verbose, syslog):
             )
     handler.setFormatter(formatter)
     handler.setLevel(log_level)
-    logger.addHandler(handler)
+    LOGGER.addHandler(handler)
 
 
-def command():
+def main():
     '''
     Entry point for the package, as defined in setup.py.
     '''
@@ -189,7 +189,7 @@ def command():
         exitcode = 2
     elif optarg.args['lb_type'] and optarg.args['lb_name']:
         setup_logging(optarg.args['verbose'], optarg.args['syslog'])
-        logger.debug('Command line arguments: %s', optarg.args)
+        LOGGER.debug('Command line arguments: %s', optarg.args)
         exitcode = clustercron(
             optarg.args['lb_type'],
             optarg.args['lb_name'],

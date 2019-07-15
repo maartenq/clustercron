@@ -7,17 +7,17 @@ from setuptools import setup
 
 
 with open('README.rst') as readme_file:
-    readme = readme_file.read()
+    README = readme_file.read()
 
 with open('HISTORY.rst') as history_file:
-    history = history_file.read()
+    HISTORY = history_file.read()
 
-requirements = [
+REQUIREMENTS = [
     'boto',
     'requests',
 ]
 
-test_requirements = [
+TEST_REQUIREMENTS = [
     'pytest>=3.0.3',
     'pytest-cov>=2.4.0',
     'responses>=0.5.1',
@@ -29,7 +29,7 @@ setup(
     version='0.4.10',
     description='Cron job wrapper that ensures a script gets run from one node'
     ' in the cluster.',
-    long_description=readme + '\n\n' + history,
+    long_description=README + '\n\n' + HISTORY,
     author='Maarten Diemel',
     author_email='maarten@maartendiemel.nl',
     url='https://github.com/maartenq/clustercron',
@@ -39,11 +39,11 @@ setup(
     package_dir={'clustercron': 'clustercron'},
     entry_points={
         'console_scripts': [
-            'clustercron = clustercron.main:command',
+            'clustercron = clustercron.main:main',
         ]
     },
     include_package_data=True,
-    install_requires=requirements,
+    install_requires=REQUIREMENTS,
     license="ISC license",
     zip_safe=False,
     keywords='clustercron',
@@ -54,16 +54,13 @@ setup(
         'License :: OSI Approved :: ISC License (ISCL)',
         'Natural Language :: English',
         'Operating System :: POSIX',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.6',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
-        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
         'Topic :: Documentation :: Sphinx',
         'Topic :: Utilities',
     ],
     test_suite='tests',
-    tests_require=test_requirements,
+    tests_require=TEST_REQUIREMENTS,
 )
