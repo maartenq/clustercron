@@ -1,0 +1,10 @@
+Sphinx
+bumpversion
+coverage
+flake8
+pytest-cov
+pytest
+responses
+sphinx-rtd-theme
+tox
+twine

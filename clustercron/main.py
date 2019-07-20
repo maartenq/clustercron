@@ -164,8 +164,8 @@ def setup_logging(verbose, syslog):
     formatter = logging.Formatter(fmt='%(levelname)-8s %(name)s : %(message)s')
     if syslog:
         unix_socket = {
-            'linux2': os.path.realpath(b'/dev/log'),
-            'darwin': os.path.realpath(b'/var/run/syslog'),
+            'linux2': os.path.realpath('/dev/log'),
+            'darwin': os.path.realpath('/var/run/syslog'),
         }.get(sys.platform, '')
         if os.path.exists(unix_socket) and \
                 stat.S_ISSOCK(os.stat(unix_socket).st_mode):
