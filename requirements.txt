@@ -1,4 +1,2 @@
-boto
-requests
-setuptools
-wheel
+boto==2.49.0
+requests==2.19.1

@@ -7,17 +7,17 @@ clustercron.elb
 ---------------
 '''
 
+from __future__ import unicode_literals
 
 import logging
 import requests
-
 import boto.ec2.elb
 
 
-LOGGER = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
-class Elb():
+class Elb(object):
     URL_INSTANCE_ID = \
         'http://169.254.169.254/1.0/meta-data/instance-id'
 
@@ -26,19 +26,19 @@ class Elb():
         self.timeout = timeout
 
     def _get_instance_id(self):
-        LOGGER.debug('Get instance ID')
+        logger.debug('Get instance ID')
         instance_id = None
         try:
             resp = requests.get(self.URL_INSTANCE_ID, timeout=self.timeout)
         except Exception as error:
-            LOGGER.error('Could not get instance health states: %s', error)
+            logger.error('Could not get instance health states: %s', error)
         else:
             instance_id = resp.text
-            LOGGER.info('Instance ID: %s', instance_id)
+            logger.info('Instance ID: %s', instance_id)
         return instance_id
 
     def _get_inst_health_states(self):
-        LOGGER.debug('Get instance health states')
+        logger.debug('Get instance health states')
         inst_health_states = []
         try:
             conn = boto.ec2.elb.ELBConnection()
@@ -47,17 +47,16 @@ class Elb():
             inst_health_states = lb.get_instance_health()
         except Exception as error:
             print(error)
-            LOGGER.error('Could not get instance health states: %s', error)
+            logger.error('Could not get instance health states: %s', error)
         else:
-            LOGGER.debug('Instance health states: %s', inst_health_states)
+            logger.debug('Instance health states: %s', inst_health_states)
         return inst_health_states
 
-    @staticmethod
-    def _is_master(instance_id, inst_health_states):
-        LOGGER.debug('Check if instance is master')
+    def _is_master(self, instance_id, inst_health_states):
+        logger.debug('Check if instance is master')
         res = False
         instances_all = sorted([x.instance_id for x in inst_health_states])
-        LOGGER.info(
+        logger.info(
             'All instances: %s Instance in list: %s',
             ', '.join(instances_all),
             instance_id in instances_all,
@@ -66,14 +65,14 @@ class Elb():
             x.instance_id for x in inst_health_states
             if x.state == 'InService'
         ])
-        LOGGER.info(
+        logger.info(
             'Instances in service: %s Instance in list: %s',
             ', '.join(instances_in_service),
             instance_id in instances_in_service,
         )
         if instances_in_service:
             res = instance_id == instances_in_service[0]
-        LOGGER.info('This instance master: %s', res)
+        logger.info('This instance master: %s', res)
         return res
 
     def master(self):

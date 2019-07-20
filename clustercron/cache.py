@@ -7,11 +7,13 @@ clustercron.cache
 -----------------
 '''
 
+from __future__ import unicode_literals
 import fcntl
 import io
 import json
 import logging
 import logging.handlers
+import sys
 import time
 import random
 
@@ -19,10 +21,17 @@ from datetime import datetime
 from datetime import timedelta
 
 
-LOGGER = logging.getLogger(__name__)
+if sys.version_info < (3,):
+    text_type = unicode  # NOQA
+    binary_type = str
+else:
+    text_type = str
+    binary_type = bytes
+
+logger = logging.getLogger(__name__)
 
 
-class Cache():
+class Cache(object):
     def __init__(self):
         self.master = False
         self.dct = {
@@ -52,16 +61,18 @@ class Cache():
             'isodate': datetime.now(),
         }
 
-    def load_json(self, fd):
-        self.dct = json.load(fd, object_hook=self.iso2datetime_hook)
+    def load_json(self, fp):
+        self.dct = json.load(fp, object_hook=self.iso2datetime_hook)
         self.master = self.dct['master']
 
-    def safe_json(self, fd):
-        fd.write(
-            json.dumps(
-                self.dct,
-                default=self.json_serial,
-                ensure_ascii=False,
+    def safe_json(self, fp):
+        fp.write(
+            text_type(
+                json.dumps(
+                    self.dct,
+                    default=self.json_serial,
+                    ensure_ascii=False
+                )
             )
         )
 
@@ -77,52 +88,52 @@ def check(master_check, filename, expire_time, max_iter):
         retry = False
         time.sleep(random.random())
         try:
-            LOGGER.debug('Open cache file for read/write (try %s).', i + 1)
-            fd = io.open(filename, 'r+')
+            logger.debug('Open cache file for read/write (try %s).', i + 1)
+            fp = io.open(filename, 'r+')
             file_exists = True
         except IOError as error:
             if error.errno != 2:
                 raise
-            LOGGER.debug('No cache file. Open new cache file for write.')
-            fd = io.open(filename, 'w')
+            logger.debug('No cache file. Open new cache file for write.')
+            fp = io.open(filename, 'w')
         try:
-            LOGGER.debug('Lock cache file.')
-            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            logger.debug('Lock cache file.')
+            fcntl.flock(fp, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except IOError as error:
             if error.errno != 11:
                 raise
-            LOGGER.debug('Cache file is locked.')
+            logger.debug('Cache file is locked.')
             retry = True
         else:
             if file_exists:
-                LOGGER.debug('Read cache from existing file.')
-                cache.load_json(fd)
+                logger.debug('Read cache from existing file.')
+                cache.load_json(fp)
                 if cache.expired(expire_time):
-                    LOGGER.debug('Cache expired, do check.')
+                    logger.debug('Cache expired, do check.')
                     cache.master = master_check()
                     cache.set_now()
-                    LOGGER.debug('Write cache to existing file.')
-                    fd.seek(0)
-                    cache.safe_json(fd)
-                    fd.truncate()
+                    logger.debug('Write cache to existing file.')
+                    fp.seek(0)
+                    cache.safe_json(fp)
+                    fp.truncate()
                 else:
-                    LOGGER.debug('Cache not expired.')
+                    logger.debug('Cache not expired.')
             else:
-                LOGGER.debug('Do check.')
+                logger.debug('Do check.')
                 cache.master = master_check()
                 cache.set_now()
-                LOGGER.debug('Write cache to new file.')
-                cache.safe_json(fd)
+                logger.debug('Write cache to new file.')
+                cache.safe_json(fp)
         finally:
-            LOGGER.debug('Unlock cache file.')
-            fcntl.flock(fd, fcntl.LOCK_UN)
-            LOGGER.debug('Close cache file.')
-            fd.close()
+            logger.debug('Unlock cache file.')
+            fcntl.flock(fp, fcntl.LOCK_UN)
+            logger.debug('Close cache file.')
+            fp.close()
         if retry:
-            LOGGER.debug('Sleep 1 second before retry.')
+            logger.debug('Sleep 1 second before retry.')
             time.sleep(1)
             continue
         else:
             break
-    LOGGER.debug('Is master: %s,', cache.master)
+    logger.debug('Is master: %s,', cache.master)
     return cache.master
