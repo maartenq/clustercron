@@ -7,7 +7,7 @@ from __future__ import unicode_literals
 import logging
 import pytest
 import sys
-from clustercron import elb
+from clustercron import aws
 from clustercron import main
 
 try:
@@ -50,7 +50,7 @@ def test_clustercron_returns_2_when_master_and_command_exits_2(monkeypatch):
     Test if `main.clustercron` returns 2 when `lb.master` and command exits
     with 2.
     '''
-    monkeypatch.setattr(elb, 'Elb', ElbMock)
+    monkeypatch.setattr(aws, 'Elb', ElbMock)
     monkeypatch.setattr('subprocess.Popen', PopenMock)
 
     assert main.clustercron('elb', 'mylbname', 'a_command', False, False) == 2
@@ -61,7 +61,7 @@ def test_clustercron_returns_0_when_master_and_command_is_none(monkeypatch):
     Test if `main.clustercron` returns 0 when `lb.master` and `command` is
     None.
     '''
-    monkeypatch.setattr(elb, 'Elb', ElbMock)
+    monkeypatch.setattr(aws, 'Elb', ElbMock)
 
     assert main.clustercron('elb', 'mylbname', None, False, False) == 0
 
@@ -79,7 +79,7 @@ def test_clustercron_returns_0_when_master_output_stderr_stdout(monkeypatch):
         def communicate(self):
             return ('stdout message', 'stderr message')
 
-    monkeypatch.setattr(elb, 'Elb', ElbMock)
+    monkeypatch.setattr(aws, 'Elb', ElbMock)
     monkeypatch.setattr('subprocess.Popen', PopenMock)
     monkeypatch.setattr('sys.stderr', StringIO())
     monkeypatch.setattr('sys.stdout', StringIO())
@@ -103,7 +103,7 @@ def test_clustercron_returns_1_when_not_master(monkeypatch):
         def master(self):
             return False
 
-    monkeypatch.setattr(elb, 'Elb', ElbMock)
+    monkeypatch.setattr(aws, 'Elb', ElbMock)
 
     assert main.clustercron('elb', 'mylbname', None, False, False) == 1
 

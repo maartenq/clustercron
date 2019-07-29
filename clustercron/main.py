@@ -17,7 +17,7 @@ import stat
 import sys
 import subprocess
 from . import __version__
-from . import elb
+from . import aws
 from . import cache
 from . import config
 
@@ -36,7 +36,7 @@ def clustercron(lb_type, lb_name, command, output, use_cache):
     :param output: Boolean
     '''
     if lb_type == 'elb':
-        lb = elb.Elb(lb_name)
+        lb = aws.Elb(lb_name)
         if use_cache:
             master = cache.check(lb.master, **config.cache)
         else:

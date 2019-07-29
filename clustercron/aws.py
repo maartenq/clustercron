@@ -1,4 +1,4 @@
-# clustercron/elb.py
+# clustercron/aws.py
 # vim: ts=4 et sw=4 sts=4 ft=python fenc=UTF-8 ai
 # -*- coding: utf-8 -*-
 
