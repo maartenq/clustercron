@@ -125,15 +125,15 @@ is the `master` in the cluster and will return 0 if so.
             if arg == '--version':
                 self.args['version'] = True
                 break
-            if arg == '-v' or arg == '--verbose':
+            if arg in ('-v', '--verbose'):
                 self.args['verbose'] += 1
-            if arg == '-o' or arg == '--output':
+            if arg in ('-o', '--output'):
                 self.args['output'] = True
-            if arg == '-s' or arg == '--syslog':
+            if arg in ('-s', '--syslog'):
                 self.args['syslog'] = True
-            if arg == '-c' or arg == '--cache':
+            if arg in ('-c', '--cache'):
                 self.args['cache'] = True
-            if arg == 'elb':
+            if arg in ('elb', 'alb'):
                 self.args['lb_type'] = arg
                 try:
                     self.args['name'] = arg_list.pop()
