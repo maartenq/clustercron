@@ -94,8 +94,8 @@ def test_get_inst_health_states_returns_instance_health_states(monkeypatch):
     intance_health_states
     '''
     instance_health_states = [
-        Inst_health_state('i-cba0ce84', 'InService'),
-        Inst_health_state('i-1d564f5c', 'InService'),
+        Inst_health_state('i-0fd16fc5011601deb', 'InService'),
+        Inst_health_state('i-019c3471ba8e5659a', 'InService'),
     ]
 
     class LoadBalancerMock(object):
@@ -117,10 +117,14 @@ def test_Elb_master_returns_True(monkeypatch):
     Test if `Elb.master` returns True
     '''
     instance_health_states = [
-        Inst_health_state('i-cba0ce84', 'InService'),
-        Inst_health_state('i-1d564f5c', 'InService'),
+        Inst_health_state('i-0fd16fc5011601deb', 'InService'),
+        Inst_health_state('i-019c3471ba8e5659a', 'InService'),
     ]
-    monkeypatch.setattr(elb.Elb, 'get_instance_id', lambda self: 'i-1d564f5c')
+    monkeypatch.setattr(
+        elb.Elb,
+        'get_instance_id',
+        lambda self: 'i-019c3471ba8e5659a',
+    )
     monkeypatch.setattr(
         elb.Elb,
         '_get_instance_health_states',
@@ -135,10 +139,14 @@ def test_Elb_master_returns_False(monkeypatch):
     Test if `Elb.master` returns False
     '''
     instance_health_states = [
-        Inst_health_state('i-cba0ce84', 'InService'),
-        Inst_health_state('i-1d564f5c', 'InService'),
+        Inst_health_state('i-0fd16fc5011601deb', 'InService'),
+        Inst_health_state('i-019c3471ba8e5659a', 'InService'),
     ]
-    monkeypatch.setattr(elb.Elb, 'get_instance_id', lambda self: 'i-cba0ce84')
+    monkeypatch.setattr(
+        elb.Elb,
+        'get_instance_id',
+        lambda self: 'i-0fd16fc5011601deb',
+    )
     monkeypatch.setattr(
         elb.Elb,
         '_get_instance_health_states',
@@ -153,10 +161,14 @@ def test_Elb_master_returns_False_when_instance_id_is_None(monkeypatch):
     Test if `Elb.master` returns False when `Elb.instance_id` is None.
     '''
     instance_health_states = [
-        Inst_health_state('i-cba0ce84', 'InService'),
-        Inst_health_state('i-1d564f5c', 'InService'),
+        Inst_health_state('i-0fd16fc5011601deb', 'InService'),
+        Inst_health_state('i-019c3471ba8e5659a', 'InService'),
     ]
-    monkeypatch.setattr(elb.Elb, 'get_instance_id', lambda self: 'i-cba0ce84')
+    monkeypatch.setattr(
+        elb.Elb,
+        'get_instance_id',
+        lambda self: 'i-0fd16fc5011601deb',
+    )
     monkeypatch.setattr(
         elb.Elb,
         '_get_instance_health_states',
