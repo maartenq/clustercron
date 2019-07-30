@@ -17,7 +17,6 @@ import stat
 import sys
 import subprocess
 from . import __version__
-from . import aws
 from . import cache
 from . import config
 
@@ -26,17 +25,24 @@ from . import config
 logger = logging.getLogger(__name__)
 
 
-def clustercron(lb_type, lb_name, command, output, use_cache):
+def clustercron(lb_type, name, command, output, use_cache):
     '''
     API clustercron
 
     :param lb_type: Type of loadbalancer
-    :param lb_name: Name of the loadbalancer instance
+    :param name: Name of the loadbalancer instance
     :param command: Command as a list
     :param output: Boolean
     '''
     if lb_type == 'elb':
-        lb = aws.Elb(lb_name)
+        from . import elb
+        lb = elb.Elb(name)
+    elif lb_type == 'alb':
+        from . import alb
+        lb = alb.Alb(name)
+    else:
+        lb = None
+    if lb is not None:
         if use_cache:
             master = cache.check(lb.master, **config.cache)
         else:
@@ -87,7 +93,7 @@ class Optarg(object):
             'syslog': False,
             'cache': False,
             'lb_type': None,
-            'lb_name': None,
+            'name': None,
             'command': [],
         }
         self.usage = '''usage:
@@ -130,14 +136,14 @@ is the `master` in the cluster and will return 0 if so.
             if arg == 'elb':
                 self.args['lb_type'] = arg
                 try:
-                    self.args['lb_name'] = arg_list.pop()
+                    self.args['name'] = arg_list.pop()
                 except IndexError:
                     pass
                 arg_list.reverse()
                 self.args['command'] = list(arg_list)
                 break
-        if self.args['lb_name'] and self.args['lb_name'].startswith('-'):
-            self.args['lb_name'] = None
+        if self.args['name'] and self.args['name'].startswith('-'):
+            self.args['name'] = None
         if self.args['command'] and self.args['command'][0].startswith('-'):
             self.args['command'] = []
         logger.debug('verbose: %s', self.args['verbose'])
@@ -187,12 +193,12 @@ def command():
     if optarg.args['version']:
         print(__version__)
         exitcode = 2
-    elif optarg.args['lb_type'] and optarg.args['lb_name']:
+    elif optarg.args['lb_type'] and optarg.args['name']:
         setup_logging(optarg.args['verbose'], optarg.args['syslog'])
         logger.debug('Command line arguments: %s', optarg.args)
         exitcode = clustercron(
             optarg.args['lb_type'],
-            optarg.args['lb_name'],
+            optarg.args['name'],
             optarg.args['command'],
             optarg.args['output'],
             optarg.args['cache'],
