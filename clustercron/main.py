@@ -96,16 +96,19 @@ class Optarg(object):
             'name': None,
             'command': [],
         }
-        self.usage = '''usage:
-    clustercron [options] elb <loadbalancer_name> [<cron_command>]
-    clustercron --version
-    clustercron (-h|--help)
+        self.usage = '''Clustercron, cluster cronjob wrapper.
 
-    options:
-        (-v|--verbose)  Info logging. Add extra `-v` for debug logging.
-        (-s|--syslog)   Log to (local) syslog.
-        (-c|--cache)    Cache output from master check.
-        (-o|--output)   Output stdout and stderr from <cron_command>.
+Usage:
+    clustercron [options] elb <loadbalancer_name> [<cron_command>]
+    clustercron [options] alb <target_group_name> [<cron_command>]
+    clustercron -h | --help
+    clustercron --version
+
+Options:
+    -v --verbose  Info logging. Add extra `-v` for debug logging.
+    -s --syslog   Log to (local) syslog.
+    -c --cache    Cache output from master check.
+    -o --output   Output stdout and stderr from <cron_command>.
 
 Clustercron is cronjob wrapper that tries to ensure that a script gets run
 only once, on one host from a pool of nodes of a specified loadbalancer.
