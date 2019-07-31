@@ -4,6 +4,13 @@
 History
 =======
 
+0.4.10 (2019-07-31)
+-------------------
+
+* Added ElasticLoadBalancingv2 (ALB) support.
+* Update requirements
+
+
 0.4.10 (2016-10-14)
 -------------------
 
