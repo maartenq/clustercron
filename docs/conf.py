@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+
+from __future__ import unicode_literals
+
 #
 # Configuration file for the Sphinx documentation builder.
 #
@@ -19,14 +22,14 @@
 
 # -- Project information -----------------------------------------------------
 
-project = u'Clustercron'
-copyright = u'2019, Maarten'
-author = u'Maarten'
+project = 'Clustercron'
+copyright = '2019, Maarten'
+author = 'Maarten'
 
 # The short X.Y version
-version = u''
+version = '0.5'
 # The full version, including alpha/beta/rc tags
-release = u'0.4.10'
+release = '0.5.1'
 
 
 # -- General configuration ---------------------------------------------------
@@ -64,7 +67,7 @@ language = None
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = [u'_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
@@ -129,8 +132,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'Clustercron.tex', u'Clustercron Documentation',
-     u'Maarten', 'manual'),
+    (master_doc, 'Clustercron.tex', 'Clustercron Documentation',
+     'Maarten', 'manual'),
 ]
 
 
@@ -139,7 +142,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'clustercron', u'Clustercron Documentation',
+    (master_doc, 'clustercron', 'Clustercron Documentation',
      [author], 1)
 ]
 
@@ -150,7 +153,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'Clustercron', u'Clustercron Documentation',
+    (master_doc, 'Clustercron', 'Clustercron Documentation',
      author, 'Clustercron', 'One line description of project.',
      'Miscellaneous'),
 ]
