@@ -5,6 +5,8 @@
 '''
 clustercron.lb
 ---------------
+
+Modules holds base class for AWS ElasticLoadBalancing classes
 '''
 
 from __future__ import unicode_literals

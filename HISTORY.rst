@@ -4,9 +4,10 @@
 History
 =======
 
-0.5.3 (2019-07-31)
+0.5.4 (2019-07-31)
 ------------------
 
+* Added boto3 requirements to setup.py
 * Docs update
 
 

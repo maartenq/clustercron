@@ -14,6 +14,7 @@ with open('HISTORY.rst') as history_file:
 
 requirements = [
     'boto',
+    'boto3',
     'requests',
 ]
 

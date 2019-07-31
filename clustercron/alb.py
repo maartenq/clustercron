@@ -1,10 +1,12 @@
-# clustercron/aws.py
+# clustercron/alb.py
 # vim: ts=4 et sw=4 sts=4 ft=python fenc=UTF-8 ai
 # -*- coding: utf-8 -*-
 
 '''
-clustercron.elb
+clustercron.alb
 ---------------
+
+Modules holds class for AWS ElasticLoadBalancing v2 (ALB)
 '''
 
 from __future__ import unicode_literals

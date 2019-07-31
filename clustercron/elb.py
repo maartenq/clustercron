@@ -5,6 +5,8 @@
 '''
 clustercron.elb
 ---------------
+
+Modules holds class for AWS ElasticLoadBalancing (ELB)
 '''
 
 from __future__ import unicode_literals
