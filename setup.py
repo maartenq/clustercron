@@ -30,8 +30,8 @@ setup(
     description='Cron job wrapper that ensures a script gets run from one node'
     ' in the cluster.',
     long_description=readme + '\n\n' + history,
-    author='Maarten Diemel',
-    author_email='maarten@maartendiemel.nl',
+    author='Maarten',
+    author_email='ikmaarten@gmail.com',
     url='https://github.com/maartenq/clustercron',
     packages=[
         'clustercron',

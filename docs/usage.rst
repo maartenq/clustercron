@@ -7,24 +7,25 @@ clustercron --help
 ------------------
 ::
 
-    $ clustercron --help
+  Clustercron, cluster cronjob wrapper.
 
-    usage:
-        clustercron [options] elb <loadbalancer_name> [<cron_command>]
-        clustercron --version
-        clustercron (-h|--help)
+  Usage:
+      clustercron [options] elb <load_balancer_name> [<cron_command>]
+      clustercron [options] alb <target_group_name> [<cron_command>]
+      clustercron -h | --help
+      clustercron --version
 
-        options:
-            (-v|--verbose)  Info logging. Add extra `-v` for debug logging.
-            (-s|--syslog)   Log to (local) syslog.
-            (-c|--cache)    Cache output from master check.
-            (-o|--output)   Output stdout and stderr from <cron_command>.
+  Options:
+      -v --verbose  Info logging. Add extra `-v` for debug logging.
+      -s --syslog   Log to (local) syslog.
+      -c --cache    Cache output from master check.
+      -o --output   Output stdout and stderr from <cron_command>.
 
-    Clustercron is cronjob wrapper that tries to ensure that a script gets run
-    only once, on one host from a pool of nodes of a specified loadbalancer.
+  Clustercron is cronjob wrapper that tries to ensure that a script gets run
+  only once, on one host from a pool of nodes of a specified loadbalancer.
 
-    Without specifying a <cron_command> clustercron will only check if the node
-    is the `master` in the cluster and will return 0 if so.
+  Without specifying a <cron_command> clustercron will only check if the node
+  is the `master` in the cluster and will return 0 if so.
 
 
 Command line examples
@@ -32,20 +33,23 @@ Command line examples
 
 **Clustercron** can be run from command line for debugging.
 
-**Clustercron** can be run with only *load balancer type* and *load balancer name*.
-Without a *command* specified clustron will test is the node is *master* and
-return 0 if that is the case::
+For **Clustercron ELB** a *Load Balancer Name*. must be specified.
+
+For **Clustercron ALB** a *Target Group Name*. must be specified.
+
+Without a *command* specified clustron will test is the node
+is *master* and return 0 if that is the case::
 
     $ clustercron elb mylbname
     $ echo $?
     0
 
-On one node::
+On a node not determined as 'master'::
 
     $ clustercron elb mylbname || echo "I'm not master"
     I'm not master
 
-On other node::
+On a node determined as 'master'::
 
     $ clustercron elb mylbname && echo "I'm master"
     I'm master
@@ -53,37 +57,40 @@ On other node::
 
 With options `-v` or `--verbose` **clustercron** will output vebose info to console.
 
-Check if node is master with verbose (info) output::
+Check if node is determined as master with verbose (info) output::
 
     $ clustercron -v elb mylbname
-    INFO     clustercron.elb : Instance ID: i-ca289460
-    INFO     clustercron.elb : All instances: i-58e224a1, i-ca289460 Instance in list: True
-    INFO     clustercron.elb : Instances in service: i-58e224a1, i-ca289460 Instance in list: True
-    INFO     clustercron.elb : This instance master: False
 
 
-Check if node is master with verbose (info) output::
+Check if node is not determined as master with verbose (info) output::
 
     $ clustercron -v elb mylbname
-    INFO     clustercron.elb : Instance ID: i-ca289460
-    INFO     clustercron.elb : All instances: i-58e224a1, i-ca289460 Instance in list: True
-    INFO     clustercron.elb : Instances in service: i-ca289460 Instance in list: True
-    INFO     clustercron.elb : This instance master: True
+    INFO     clustercron.lb : Instance ID: i-05cc16d1d054104f2
+    INFO     clustercron.elb : Healty instances: i-05cc16d1d054104f2, i-0f13be692f5f35b5e
 
 
-With options `-s` or `--syslog` and `-v` or `--verbose` **clustercron** will only output to syslog::
+With options `-s` or `--syslog` and `-v` or `--verbose` **clustercron** will
+only output to syslog. ELB example::
 
     $ clustercron -v -s elb mylbname echo test
-    $ sudo tail  -9 /var/log/messages
-    Sep 13 09:23:50 ip-172-30-0-83 requests.packages.urllib3.connectionpool [5262]: Starting new HTTP connection (1): 169.254.169.254
-    Sep 13 09:23:50 ip-172-30-0-83 clustercron.elb [5262]: Instance ID: i-58e224a1
-    Sep 13 09:23:51 ip-172-30-0-83 clustercron.elb [5262]: All instances: i-58e224a1, i-ca289460 Instance in list: True
-    Sep 13 09:23:51 ip-172-30-0-83 clustercron.elb [5262]: Instances in service: i-58e224a1, i-ca289460 Instance in list: True
-    Sep 13 09:23:51 ip-172-30-0-83 clustercron.elb [5262]: This instance master: True
-    Sep 13 09:23:51 ip-172-30-0-83 clustercron.main [5262]: run command: echo test
-    Sep 13 09:23:51 ip-172-30-0-83 clustercron.main [5262]: stdout: test
-    Sep 13 09:23:51 ip-172-30-0-83 clustercron.main [5262]: stderr:
-    Sep 13 09:23:51 ip-172-30-0-83 clustercron.main [5262]: returncode: 0
+    $ sudo tail /var/log/messages
+    Jul 31 13:58:24 ip-172-31-7-231 journal: clustercron.lb [31512]: Instance ID: i-05cc16d1d054104f2
+    Jul 31 13:58:24 ip-172-31-7-231 journal: clustercron.elb [31512]: Healty instances: i-05cc16d1d054104f2, i-0f13be692f5f35b5e
+    Jul 31 13:58:24 ip-172-31-7-231 journal: clustercron.main [31512]: run command: echo test
+    Jul 31 13:58:24 ip-172-31-7-231 journal: clustercron.main [31512]: stdout: test
+    Jul 31 13:58:24 ip-172-31-7-231 journal: clustercron.main [31512]: stderr:
+    Jul 31 13:58:24 ip-172-31-7-231 journal: clustercron.main [31512]: returncode: 0
+
+With options `-s` or `--syslog` and `-v` or `--verbose` **clustercron** will
+only output to syslog ALB example::
+
+    $ clustercron -v -s alb mytargetgroupname echo test
+    Jul 31 14:04:53 ip-10-0-2-129 journal: clustercron.lb [31204]: Instance ID: i-05d7670fb9114c58e
+    Jul 31 14:04:53 ip-10-0-2-129 journal: clustercron.alb [31204]: Healty instances: i-05d7670fb9114c58e, i-0b5be35c81d1b50d4
+    Jul 31 14:04:53 ip-10-0-2-129 journal: clustercron.main [31204]: run command: echo test
+    Jul 31 14:04:53 ip-10-0-2-129 journal: clustercron.main [31204]: stdout: test
+    Jul 31 14:04:53 ip-10-0-2-129 journal: clustercron.main [31204]: stderr:
+    Jul 31 14:04:53 ip-10-0-2-129 journal: clustercron.main [31204]: returncode: 0
 
 
 By default **clustercron** will not output `stdout` and `stderr` generated by

@@ -12,6 +12,8 @@ from __future__ import unicode_literals
 import logging
 import boto3
 
+from botocore.exceptions import NoRegionError
+
 from .lb import Lb
 
 logger = logging.getLogger(__name__)
@@ -21,18 +23,30 @@ class Alb(Lb):
     def _get_target_health(self):
         target_health = []
         logger.debug('Get instance health states')
-        client = boto3.client('elbv2')
+        try:
+            client = boto3.client('elbv2')
+        except NoRegionError as error:
+            logger.error('%s', error)
+            return target_health
         try:
             targetgroups = client.describe_target_groups(
                 Names=[self.name])
         except client.exceptions.TargetGroupNotFoundException as error:
-            logger.error('Could not get `TargetGroup`: %s', error)
+            logger.error(
+                'Could not get TargetGroup `%s`: %s',
+                self.name,
+                error,
+            )
         else:
             try:
                 targetgroup_arn = targetgroups.get(
                     'TargetGroups')[0]['TargetGroupArn']
             except Exception as error:
-                logger.error('Could not get `TargetGroupArn`: %s', error)
+                logger.error(
+                    'Could not get TargetGroupArn for `%s`: %s',
+                    self.name,
+                    error,
+                )
             else:
                 logger.debug('targetgroup_arn: %s' % targetgroup_arn)
                 try:

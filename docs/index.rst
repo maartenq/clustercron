@@ -6,9 +6,11 @@ Contents:
 
 .. toctree::
    :maxdepth: 2
+   :caption: Contents:
+
 
    readme
-   elb
+   elb_alb
    installation
    configuration
    usage
@@ -17,9 +19,10 @@ Contents:
    authors
    history
 
+
 Indices and tables
 ==================
 
 * :ref:`genindex`
 * :ref:`modindex`
-
+* :ref:`search`

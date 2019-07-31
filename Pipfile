@@ -14,7 +14,6 @@ sphinx-rtd-theme = "*"
 tox = "*"
 twine = "*"
 Sphinx = "*"
-ipython = "*"
 
 [packages]
 boto = "==2.49.0"

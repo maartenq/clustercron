@@ -21,6 +21,10 @@ class Lb(object):
         'http://169.254.169.254/1.0/meta-data/instance-id'
 
     def __init__(self, name, timeout=3):
+        '''
+        :param name: name of load balancer or target group
+        :param timeout: timeout in seconds
+        '''
         self.name = name
         self.timeout = timeout
 
