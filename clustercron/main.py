@@ -25,6 +25,25 @@ from . import config
 logger = logging.getLogger(__name__)
 
 
+def get_meta_data(key, timeout=3):
+    '''
+    :param key: meta-data key
+    :param timeout: timeout in seconds
+    '''
+    URL_INSTANCE_ID = \
+        'http://169.254.169.254/1.0/meta-data/{0}'.format(key)
+    value = None
+    logger.debug('Get %s', key)
+    try:
+        response = requests.get(URL_INSTANCE_ID, timeout=timeout)
+    except Exception as error:
+        logger.error('Could not get `%s`: %s', key, error)
+    else:
+        value = response.text
+        logger.info('%s: %s', key, value)
+    return value
+
+
 def clustercron(lb_type, name, command, output, use_cache):
     '''
     API clustercron

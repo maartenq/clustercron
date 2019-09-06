@@ -12,44 +12,42 @@ Modules holds base class for AWS ElasticLoadBalancing classes
 from __future__ import unicode_literals
 
 import logging
-import requests
+import boto.utils
 
 
 logger = logging.getLogger(__name__)
 
 
 class Lb(object):
-    URL_INSTANCE_ID = \
-        'http://169.254.169.254/1.0/meta-data/instance-id'
-
-    def __init__(self, name, timeout=3):
+    def __init__(self, name):
         '''
         :param name: name of load balancer or target group
-        :param timeout: timeout in seconds
         '''
         self.name = name
-        self.timeout = timeout
+        self._get_instance_meta_data()
 
-    def get_instance_id(self):
-        instance_id = None
-        logger.debug('Get instance ID')
+
+    def _get_instance_meta_data(self):
         try:
-            response = requests.get(self.URL_INSTANCE_ID, timeout=self.timeout)
+            data = boto.utils.get_instance_identity()
         except Exception as error:
-            logger.error('Could not get Instance ID: %s', error)
-        else:
-            instance_id = response.text
-            logger.info('Instance ID: %s', instance_id)
-        return instance_id
+            logger.error('Could not get instance data: %s', error)
+            data = {'document': {}}
+        self.region_name = data['document'].get('region')
+        self.instance_id = data['document'].get('instanceId')
+
+        logger.info('self.region_name: %s', self.region_name)
+        logger.info('self.instance_id: %s', self.instance_id)
 
     def get_healty_instances(self):
         raise NotImplementedError
 
     def master(self):
         logger.debug('Check if instance is master')
-        instance_id = self.get_instance_id()
-        if instance_id:
+        if self.instance_id is None:
+            logger.error('No Instanced Id')
+        else:
             healty_instances = self.get_healty_instances()
             if healty_instances:
-                return instance_id == healty_instances[0]
+                return self.instance_id == healty_instances[0]
         return False

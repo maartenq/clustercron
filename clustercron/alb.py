@@ -28,8 +28,14 @@ class Alb(Lb):
         try:
             client = boto3.client('elbv2')
         except NoRegionError as error:
-            logger.error('%s', error)
-            return target_health
+            if self.region_name is None:
+                logger.error('%s', error)
+                return target_health
+            else:
+                client = boto3.client(
+                            'elbv2',
+                            region_name=self.region_name,
+                        )
         try:
             targetgroups = client.describe_target_groups(
                 Names=[self.name])
