@@ -51,8 +51,13 @@ class Cache(object):
 
     @staticmethod
     def iso2datetime_hook(dct):
-        dct['isodate'] = datetime.strptime(
-            dct['isodate'], '%Y-%m-%dT%H:%M:%S.%f')
+        try:
+            dct['isodate'] = datetime.strptime(
+                dct['isodate'], '%Y-%m-%dT%H:%M:%S.%f')
+        except ValueError as error:
+            logger.warning('Different isodate JSON format: %s', error)
+            dct['isodate'] = datetime.strptime(
+                dct['isodate'], '%Y-%m-%dT%H:%M:%S')
         return dct
 
     def set_now(self):
