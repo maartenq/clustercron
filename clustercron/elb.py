@@ -12,7 +12,9 @@ Modules holds class for AWS ElasticLoadBalancing (ELB)
 from __future__ import unicode_literals
 
 import logging
-import boto.ec2.elb
+import boto3
+
+from botocore.exceptions import NoRegionError
 
 from .lb import Lb
 
@@ -21,32 +23,44 @@ logger = logging.getLogger(__name__)
 
 
 class Elb(Lb):
-    def _get_instance_health_states(self):
-        inst_health_states = []
-        logger.debug('Get instance health states')
+    def _get_instance_health(self):
+        inst_health = {'InstanceStates': []}
+        logger.debug('Get instance health ')
         try:
-            conn = boto.ec2.elb.ELBConnection()
-            lb = conn.get_all_load_balancers(
-                load_balancer_names=[self.name])[0]
-            inst_health_states = lb.get_instance_health()
+            client = boto3.client('elb')
+        except NoRegionError as error:
+            if self.region_name is None:
+                logger.error('%s', error)
+                return inst_health
+            else:
+                client = boto3.client(
+                            'elb',
+                            region_name=self.region_name,
+                        )
+        try:
+            inst_health = client.describe_instance_health(
+                LoadBalancerName=self.name,
+            )
         except Exception as error:
-            logger.error('Could not get instance health states: %s', error)
-        return inst_health_states
+            logger.error('Could not get instance health: %s', error)
+        return inst_health
 
     def get_healty_instances(self):
         healty_instances = []
-        inst_health_states = self._get_instance_health_states()
-        if inst_health_states:
-            logger.debug('Instance health states: %s', inst_health_states)
-            try:
-                healty_instances = sorted(
-                    x.instance_id for x in inst_health_states
-                    if x.state == 'InService'
-                )
-            except Exception as error:
-                logger.error('Could not parse healty_instances: %s', error)
-            else:
-                logger.info(
-                    'Healty instances: %s', ', '.join(healty_instances)
-                )
+        inst_health = self._get_instance_health()
+        logger.debug('Instance health states: %s', inst_health)
+        try:
+            healty_instances = sorted(
+                    [
+                        x['InstanceId'] for x
+                        in inst_health['InstanceStates']
+                        if x['State'] == 'InService'
+                    ]
+            )
+        except Exception as error:
+            logger.error('Could not parse healty_instances: %s', error)
+        else:
+            logger.info(
+                'Healty instances: %s', ', '.join(healty_instances)
+            )
         return healty_instances
