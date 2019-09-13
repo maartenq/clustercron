@@ -4,6 +4,13 @@
 History
 =======
 
+0.6.1 (2019-09-13)
+------------------
+
+* Make the region entry in ~/.aws/config optional
+* Bug fix Cache file can contain incompatible time format
+
+
 0.5.4 (2019-07-31)
 ------------------
 
