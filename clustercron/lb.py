@@ -26,7 +26,6 @@ class Lb(object):
         self.name = name
         self._get_instance_meta_data()
 
-
     def _get_instance_meta_data(self):
         try:
             data = boto.utils.get_instance_identity()
