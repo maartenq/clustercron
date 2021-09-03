@@ -4,6 +4,11 @@
 History
 =======
 
+0.6.3 (2021-09-03)
+------------------
+* Updated requirements
+
+
 0.6.2 (2020-04-02)
 ------------------
 * Updated requirements
