@@ -2,13 +2,14 @@
 Tests for `clustercron` module.
 """
 
-from __future__ import print_function
-from __future__ import unicode_literals
+from __future__ import print_function, unicode_literals
+
 import logging
-import pytest
 import sys
-from clustercron import elb
-from clustercron import main
+
+import pytest
+
+from clustercron import elb, main
 
 try:
     from StringIO import StringIO
