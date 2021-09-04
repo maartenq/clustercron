@@ -32,10 +32,7 @@ logger = logging.getLogger(__name__)
 class Cache(object):
     def __init__(self):
         self.master = False
-        self.dct = {
-            'master': self.master,
-            'isodate': datetime(1970, 1, 1)
-        }
+        self.dct = {'master': self.master, 'isodate': datetime(1970, 1, 1)}
 
     @staticmethod
     def json_serial(obj):
@@ -51,11 +48,13 @@ class Cache(object):
     def iso2datetime_hook(dct):
         try:
             dct['isodate'] = datetime.strptime(
-                dct['isodate'], '%Y-%m-%dT%H:%M:%S.%f')
+                dct['isodate'], '%Y-%m-%dT%H:%M:%S.%f'
+            )
         except ValueError as error:
             logger.warning('Different isodate JSON format: %s', error)
             dct['isodate'] = datetime.strptime(
-                dct['isodate'], '%Y-%m-%dT%H:%M:%S')
+                dct['isodate'], '%Y-%m-%dT%H:%M:%S'
+            )
         return dct
 
     def set_now(self):
@@ -72,16 +71,15 @@ class Cache(object):
         fp.write(
             text_type(
                 json.dumps(
-                    self.dct,
-                    default=self.json_serial,
-                    ensure_ascii=False
+                    self.dct, default=self.json_serial, ensure_ascii=False
                 )
             )
         )
 
     def expired(self, expire_time):
-        return datetime.now() - self.dct['isodate'] > \
-            timedelta(seconds=int(expire_time))
+        return datetime.now() - self.dct['isodate'] > timedelta(
+            seconds=int(expire_time)
+        )
 
 
 def check(master_check, filename, expire_time, max_iter):

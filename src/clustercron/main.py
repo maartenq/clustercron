@@ -34,9 +34,11 @@ def clustercron(lb_type, name, command, output, use_cache):
     '''
     if lb_type == 'elb':
         from . import elb
+
         lb = elb.Elb(name)
     elif lb_type == 'alb':
         from . import alb
+
         lb = alb.Alb(name)
     else:
         lb = None
@@ -50,9 +52,7 @@ def clustercron(lb_type, name, command, output, use_cache):
                 logger.info('run command: %s', ' '.join(command))
                 try:
                     proc = subprocess.Popen(
-                        command,
-                        stdout=subprocess.PIPE,
-                        stderr=subprocess.PIPE
+                        command, stdout=subprocess.PIPE, stderr=subprocess.PIPE
                     )
                     stdout, stderr = proc.communicate()
                     return_code = proc.returncode
@@ -81,6 +81,7 @@ class Optarg(object):
     Set usage string.
     Set properties from arguments.
     '''
+
     def __init__(self, arg_list):
         self.arg_list = arg_list
         self.args = {
@@ -174,8 +175,9 @@ def setup_logging(verbose, syslog):
             'linux2': os.path.realpath('/dev/log'),
             'darwin': os.path.realpath('/var/run/syslog'),
         }.get(sys.platform, '')
-        if os.path.exists(unix_socket) and \
-                stat.S_ISSOCK(os.stat(unix_socket).st_mode):
+        if os.path.exists(unix_socket) and stat.S_ISSOCK(
+            os.stat(unix_socket).st_mode
+        ):
             handler = logging.handlers.SysLogHandler(unix_socket)
             formatter = logging.Formatter(
                 fmt='%(name)s [%(process)d]: %(message)s', datefmt=None
