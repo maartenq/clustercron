@@ -32,5 +32,3 @@ Supported load balancers (till now):
 
     * AWS Elastic Load Balancing (ELB)
     * AWS Elastic Load Balancing v2 (ALB)
-
-

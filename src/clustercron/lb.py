@@ -12,8 +12,8 @@ Modules holds base class for AWS ElasticLoadBalancing classes
 from __future__ import unicode_literals
 
 import logging
-import boto.utils
 
+import boto.utils
 
 logger = logging.getLogger(__name__)
 

@@ -12,8 +12,8 @@ Modules holds class for AWS ElasticLoadBalancing v2 (ALB)
 from __future__ import unicode_literals
 
 import logging
-import boto3
 
+import boto3
 from botocore.exceptions import NoRegionError
 
 from .lb import Lb

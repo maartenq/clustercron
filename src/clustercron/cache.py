@@ -8,18 +8,16 @@ clustercron.cache
 '''
 
 from __future__ import unicode_literals
+
 import fcntl
 import io
 import json
 import logging
 import logging.handlers
+import random
 import sys
 import time
-import random
-
-from datetime import datetime
-from datetime import timedelta
-
+from datetime import datetime, timedelta
 
 if sys.version_info < (3,):
     text_type = unicode  # NOQA

@@ -8,18 +8,16 @@ clustercron.main
 '''
 
 
-from __future__ import unicode_literals
-from __future__ import print_function
+from __future__ import print_function, unicode_literals
+
 import logging
 import os
 import os.path
 import stat
-import sys
 import subprocess
-from . import __version__
-from . import cache
-from . import config
+import sys
 
+from . import __version__, cache, config
 
 # general libary logging
 logger = logging.getLogger(__name__)

@@ -33,7 +33,6 @@ clean: clean-build clean-pyc clean-test ## Remove all build, test, coverage and 
 
 .PHONY: clean-build
 clean-build: ## Remove build artifacts.
-	rm -fr build/
 	rm -fr dist/
 	rm -fr .eggs/
 	find . -name '*.egg-info' -exec rm -fr {} +
@@ -59,7 +58,7 @@ lint: ## Check style with flake8.
 .PHONY: test
 test: ## Run tests quickly with the default Python.
 	py.test
-	
+
 .PHONY: test-all
 test-all: ## Run tests on every Python version with tox.
 	tox
@@ -86,15 +85,9 @@ servedocs: docs ## Compile the docs watching for changes.
 
 .PHONY: release
 release: clean docs ## Package and upload a release.
-	python setup.py sdist
-	python setup.py bdist_wheel
 	twine upload dist/*
 
-dist: clean ## Builds source and wheel package.
-	python setup.py sdist
-	python setup.py bdist_wheel
+.PHONY: build
+build: clean ## Builds source and wheel package.
+	python -m build
 	ls -l dist
-
-.PHONY: release
-install: clean ## Install the package to the active Python's site-packages.
-	python setup.py install

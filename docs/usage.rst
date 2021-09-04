@@ -178,4 +178,3 @@ after 59 seconds. **Clustercron** will lock the cache file and tries to by defau
 The defaults for caching can only be altered in **Clustercron's** configuration file.
 
 See :ref:`configuration` for more information.
-

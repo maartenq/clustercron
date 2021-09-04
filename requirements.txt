@@ -1,7 +1,8 @@
+# requirements.txt
+
 -i https://pypi.org/simple
-boto==2.49.0
-boto3==1.18.35
-botocore==1.21.35 
+boto
+boto3
 docutils==0.17.1
 jmespath==0.10.0
 python-dateutil==2.8.2
