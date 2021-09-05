@@ -2,19 +2,15 @@
 Clustercron
 ===========
 
-
 .. image:: https://img.shields.io/pypi/v/clustercron.svg
         :target: https://pypi.python.org/pypi/clustercron
 
-.. image:: https://img.shields.io/travis/maartenq/clustercron.svg
-        :target: https://travis-ci.org/maartenq/clustercron
+.. image:: https://results.pre-commit.ci/badge/github/pre-commit/action/master.svg
+        :target: https://results.pre-commit.ci/latest/github/maartenq/clustercron/master
 
 .. image:: https://readthedocs.org/projects/clustercron/badge/?version=latest
         :target: https://clustercron.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
-
-.. image:: https://codecov.io/github/maartenq/clustercron/coverage.svg?branch=master
-        :target: https://codecov.io/github/maartenq/clustercron?branch=master
 
 
 **Clustercron** is cronjob wrapper that tries to ensure that a script gets run
