@@ -114,15 +114,12 @@ latex_elements = {
     # The paper size ('letterpaper' or 'a4paper').
     #
     # 'papersize': 'letterpaper',
-
     # The font size ('10pt', '11pt' or '12pt').
     #
     # 'pointsize': '10pt',
-
     # Additional stuff for the LaTeX preamble.
     #
     # 'preamble': '',
-
     # Latex figure (float) alignment
     #
     # 'figure_align': 'htbp',
@@ -132,8 +129,13 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'Clustercron.tex', 'Clustercron Documentation',
-     'Maarten', 'manual'),
+    (
+        master_doc,
+        'Clustercron.tex',
+        'Clustercron Documentation',
+        'Maarten',
+        'manual',
+    ),
 ]
 
 
@@ -142,8 +144,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'clustercron', 'Clustercron Documentation',
-     [author], 1)
+    (master_doc, 'clustercron', 'Clustercron Documentation', [author], 1)
 ]
 
 
@@ -153,9 +154,15 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'Clustercron', 'Clustercron Documentation',
-     author, 'Clustercron', 'One line description of project.',
-     'Miscellaneous'),
+    (
+        master_doc,
+        'Clustercron',
+        'Clustercron Documentation',
+        author,
+        'Clustercron',
+        'One line description of project.',
+        'Miscellaneous',
+    ),
 ]
 
 

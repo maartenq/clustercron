@@ -1,0 +1,14 @@
+# requirements_dev.txt
+-r requirements.txt
+black
+build
+bumpversion
+coverage
+flake8
+pytest
+pytest-cov
+responses
+Sphinx
+sphinx-rtd-theme
+tox
+twine

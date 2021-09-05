@@ -12,8 +12,8 @@ Modules holds class for AWS ElasticLoadBalancing v2 (ALB)
 from __future__ import unicode_literals
 
 import logging
-import boto3
 
+import boto3
 from botocore.exceptions import NoRegionError
 
 from .lb import Lb
@@ -33,12 +33,11 @@ class Alb(Lb):
                 return target_health
             else:
                 client = boto3.client(
-                            'elbv2',
-                            region_name=self.region_name,
-                        )
+                    'elbv2',
+                    region_name=self.region_name,
+                )
         try:
-            targetgroups = client.describe_target_groups(
-                Names=[self.name])
+            targetgroups = client.describe_target_groups(Names=[self.name])
         except client.exceptions.TargetGroupNotFoundException as error:
             logger.error(
                 'Could not get TargetGroup `%s`: %s',
@@ -47,8 +46,9 @@ class Alb(Lb):
             )
         else:
             try:
-                targetgroup_arn = targetgroups.get(
-                    'TargetGroups')[0]['TargetGroupArn']
+                targetgroup_arn = targetgroups.get('TargetGroups')[0][
+                    'TargetGroupArn'
+                ]
             except Exception as error:
                 logger.error(
                     'Could not get TargetGroupArn for `%s`: %s',
@@ -59,7 +59,8 @@ class Alb(Lb):
                 logger.debug('targetgroup_arn: %s' % targetgroup_arn)
                 try:
                     target_health = client.describe_target_health(
-                        TargetGroupArn=targetgroup_arn)
+                        TargetGroupArn=targetgroup_arn
+                    )
                 except Exception as error:
                     logger.error('Could not get target health: %s', error)
         return target_health
@@ -71,8 +72,8 @@ class Alb(Lb):
             logger.debug('Instance health states: %s', target_health)
             try:
                 healty_instances = sorted(
-                    x['Target']['Id'] for x in
-                    target_health.get('TargetHealthDescriptions')
+                    x['Target']['Id']
+                    for x in target_health.get('TargetHealthDescriptions')
                     if x['TargetHealth']['State'] == 'healthy'
                 )
             except Exception as error:

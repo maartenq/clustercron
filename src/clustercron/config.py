@@ -3,6 +3,7 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
+
 import os.path
 
 try:
@@ -23,7 +24,7 @@ def _update_config_from_conf():
     basename = 'clustercron.ini'
     filenames = (
         os.path.join('/etc/', basename),
-        os.path.join(os.path.expanduser("~"), '.' + basename)
+        os.path.join(os.path.expanduser("~"), '.' + basename),
     )
     parser = configparser.ConfigParser()
     for filename in filenames:

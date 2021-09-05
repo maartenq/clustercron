@@ -2,13 +2,14 @@
 Tests for `clustercron` module.
 """
 
-from __future__ import print_function
-from __future__ import unicode_literals
+from __future__ import print_function, unicode_literals
+
 import logging
-import pytest
 import sys
-from clustercron import elb
-from clustercron import main
+
+import pytest
+
+from clustercron import elb, main
 
 try:
     from StringIO import StringIO
@@ -36,13 +37,16 @@ def test_clustercron_returns_None_when_lb_type_is_not_elb():
     '''
     Test if `main.clustercron` returns None when `lb_type` is not 'elb'.
     '''
-    assert main.clustercron(
-        'really_not_elb',
-        'mylbname',
-        'command',
-        False,
-        False,
-    ) is None
+    assert (
+        main.clustercron(
+            'really_not_elb',
+            'mylbname',
+            'command',
+            False,
+            False,
+        )
+        is None
+    )
 
 
 def test_clustercron_returns_2_when_master_and_command_exits_2(monkeypatch):
@@ -84,8 +88,10 @@ def test_clustercron_returns_0_when_master_output_stderr_stdout(monkeypatch):
     monkeypatch.setattr('sys.stderr', StringIO())
     monkeypatch.setattr('sys.stdout', StringIO())
 
-    assert main.clustercron('elb', 'mylbname', ['echo' 'stdout'], True,
-                            False) == 0
+    assert (
+        main.clustercron('elb', 'mylbname', ['echo' 'stdout'], True, False)
+        == 0
+    )
     sys.stdout.seek(0)
     sys.stderr.seek(0)
     assert sys.stdout.read().strip() == 'stdout message'
@@ -96,6 +102,7 @@ def test_clustercron_returns_1_when_not_master(monkeypatch):
     '''
     Test if `main.clustercron` returns 1 when not `lb.master`
     '''
+
     class ElbMock(object):
         def __init__(self, name):
             pass
@@ -126,7 +133,9 @@ def test_Optarg_init():
 
 def test_opt_arg_parser_usage():
     opt_arg_parser = main.Optarg([])
-    assert opt_arg_parser.usage == '''Clustercron, cluster cronjob wrapper.
+    assert (
+        opt_arg_parser.usage
+        == '''Clustercron, cluster cronjob wrapper.
 
 Usage:
     clustercron [options] elb <loadbalancer_name> [<cron_command>]
@@ -146,234 +155,238 @@ only once, on one host from a pool of nodes of a specified loadbalancer.
 Without specifying a <cron_command> clustercron will only check if the node
 is the `master` in the cluster and will return 0 if so.
 '''
+    )
 
 
-@pytest.mark.parametrize('arg_list,args', [
-    (
-        [],
-        {
-            'version': False,
-            'help': False,
-            'output': False,
-            'verbose': 0,
-            'lb_type': None,
-            'name': None,
-            'command': [],
-            'syslog': False,
-            'cache': False,
-        }
-    ),
-    (
-        ['-h'],
-        {
-            'version': False,
-            'help': True,
-            'output': False,
-            'verbose': 0,
-            'lb_type': None,
-            'name': None,
-            'command': [],
-            'syslog': False,
-            'cache': False,
-        }
-    ),
-    (
-        ['whatever', 'nonsense', 'lives', 'here', '-h'],
-        {
-            'version': False,
-            'help': True,
-            'output': False,
-            'verbose': 0,
-            'lb_type': None,
-            'name': None,
-            'command': [],
-            'syslog': False,
-            'cache': False,
-        }
-    ),
-    (
-        ['--help'],
-        {
-            'version': False,
-            'help': True,
-            'output': False,
-            'verbose': 0,
-            'lb_type': None,
-            'name': None,
-            'command': [],
-            'syslog': False,
-            'cache': False,
-        }
-    ),
-    (
-        ['--help', 'whatever', 'nonsense', 'lives', 'here'],
-        {
-            'version': False,
-            'help': True,
-            'output': False,
-            'verbose': 0,
-            'lb_type': None,
-            'name': None,
-            'command': [],
-            'syslog': False,
-            'cache': False,
-        }
-    ),
-    (
-        ['--version'],
-        {
-            'version': True,
-            'help': False,
-            'output': False,
-            'verbose': 0,
-            'lb_type': None,
-            'name': None,
-            'command': [],
-            'syslog': False,
-            'cache': False,
-        }
-    ),
-    (
-        ['whatever', 'nonsense', '--version', 'lives', 'here', 'elb'],
-        {
-            'version': True,
-            'help': False,
-            'output': False,
-            'verbose': 0,
-            'lb_type': None,
-            'name': None,
-            'command': [],
-            'syslog': False,
-            'cache': False,
-        }
-    ),
-    (
-        ['-v', 'elb', 'my_lb_name', 'update', '-r', 'thing'],
-        {
-            'version': False,
-            'help': False,
-            'output': False,
-            'verbose': 1,
-            'lb_type': 'elb',
-            'name': 'my_lb_name',
-            'command': ['update', '-r', 'thing'],
-            'syslog': False,
-            'cache': False,
-        }
-    ),
-    (
-        ['-v', '-v', 'elb', 'my_lb_name', 'update', '-r', 'thing'],
-        {
-            'version': False,
-            'help': False,
-            'output': False,
-            'verbose': 2,
-            'lb_type': 'elb',
-            'name': 'my_lb_name',
-            'command': ['update', '-r', 'thing'],
-            'syslog': False,
-            'cache': False,
-        }
-    ),
-    (
-        ['elb', 'my_lb_name', 'update', '-r', 'thing'],
-        {
-            'version': False,
-            'help': False,
-            'output': False,
-            'verbose': 0,
-            'lb_type': 'elb',
-            'name': 'my_lb_name',
-            'command': ['update', '-r', 'thing'],
-            'syslog': False,
-            'cache': False,
-        }
-    ),
-    (
-        ['elb', 'my_lb_name'],
-        {
-            'version': False,
-            'help': False,
-            'output': False,
-            'verbose': 0,
-            'lb_type': 'elb',
-            'name': 'my_lb_name',
-            'command': [],
-            'syslog': False,
-            'cache': False,
-        }
-    ),
-    (
-        ['elb'],
-        {
-            'version': False,
-            'help': False,
-            'output': False,
-            'verbose': 0,
-            'lb_type': 'elb',
-            'name': None,
-            'command': [],
-            'syslog': False,
-            'cache': False,
-        }
-    ),
-    (
-        ['elb', '-v'],
-        {
-            'version': False,
-            'help': False,
-            'output': False,
-            'verbose': 0,
-            'lb_type': 'elb',
-            'name': None,
-            'command': [],
-            'syslog': False,
-            'cache': False,
-        }
-    ),
-    (
-        ['elb', 'my_lb_name', '-v'],
-        {
-            'version': False,
-            'help': False,
-            'output': False,
-            'verbose': 0,
-            'lb_type': 'elb',
-            'name': 'my_lb_name',
-            'command': [],
-            'syslog': False,
-            'cache': False,
-        }
-    ),
-    (
-        ['-v', '-v', '-s', 'elb', 'my_lb_name', 'test', '-v'],
-        {
-            'version': False,
-            'help': False,
-            'output': False,
-            'verbose': 2,
-            'lb_type': 'elb',
-            'name': 'my_lb_name',
-            'command': ['test', '-v'],
-            'syslog': True,
-            'cache': False,
-        }
-    ),
-    (
-        ['-o', '-s', 'elb', 'my_lb_name', 'test', '-v'],
-        {
-            'version': False,
-            'help': False,
-            'output': True,
-            'verbose': 0,
-            'lb_type': 'elb',
-            'name': 'my_lb_name',
-            'command': ['test', '-v'],
-            'syslog': True,
-            'cache': False,
-        }
-    ),
-])
+@pytest.mark.parametrize(
+    'arg_list,args',
+    [
+        (
+            [],
+            {
+                'version': False,
+                'help': False,
+                'output': False,
+                'verbose': 0,
+                'lb_type': None,
+                'name': None,
+                'command': [],
+                'syslog': False,
+                'cache': False,
+            },
+        ),
+        (
+            ['-h'],
+            {
+                'version': False,
+                'help': True,
+                'output': False,
+                'verbose': 0,
+                'lb_type': None,
+                'name': None,
+                'command': [],
+                'syslog': False,
+                'cache': False,
+            },
+        ),
+        (
+            ['whatever', 'nonsense', 'lives', 'here', '-h'],
+            {
+                'version': False,
+                'help': True,
+                'output': False,
+                'verbose': 0,
+                'lb_type': None,
+                'name': None,
+                'command': [],
+                'syslog': False,
+                'cache': False,
+            },
+        ),
+        (
+            ['--help'],
+            {
+                'version': False,
+                'help': True,
+                'output': False,
+                'verbose': 0,
+                'lb_type': None,
+                'name': None,
+                'command': [],
+                'syslog': False,
+                'cache': False,
+            },
+        ),
+        (
+            ['--help', 'whatever', 'nonsense', 'lives', 'here'],
+            {
+                'version': False,
+                'help': True,
+                'output': False,
+                'verbose': 0,
+                'lb_type': None,
+                'name': None,
+                'command': [],
+                'syslog': False,
+                'cache': False,
+            },
+        ),
+        (
+            ['--version'],
+            {
+                'version': True,
+                'help': False,
+                'output': False,
+                'verbose': 0,
+                'lb_type': None,
+                'name': None,
+                'command': [],
+                'syslog': False,
+                'cache': False,
+            },
+        ),
+        (
+            ['whatever', 'nonsense', '--version', 'lives', 'here', 'elb'],
+            {
+                'version': True,
+                'help': False,
+                'output': False,
+                'verbose': 0,
+                'lb_type': None,
+                'name': None,
+                'command': [],
+                'syslog': False,
+                'cache': False,
+            },
+        ),
+        (
+            ['-v', 'elb', 'my_lb_name', 'update', '-r', 'thing'],
+            {
+                'version': False,
+                'help': False,
+                'output': False,
+                'verbose': 1,
+                'lb_type': 'elb',
+                'name': 'my_lb_name',
+                'command': ['update', '-r', 'thing'],
+                'syslog': False,
+                'cache': False,
+            },
+        ),
+        (
+            ['-v', '-v', 'elb', 'my_lb_name', 'update', '-r', 'thing'],
+            {
+                'version': False,
+                'help': False,
+                'output': False,
+                'verbose': 2,
+                'lb_type': 'elb',
+                'name': 'my_lb_name',
+                'command': ['update', '-r', 'thing'],
+                'syslog': False,
+                'cache': False,
+            },
+        ),
+        (
+            ['elb', 'my_lb_name', 'update', '-r', 'thing'],
+            {
+                'version': False,
+                'help': False,
+                'output': False,
+                'verbose': 0,
+                'lb_type': 'elb',
+                'name': 'my_lb_name',
+                'command': ['update', '-r', 'thing'],
+                'syslog': False,
+                'cache': False,
+            },
+        ),
+        (
+            ['elb', 'my_lb_name'],
+            {
+                'version': False,
+                'help': False,
+                'output': False,
+                'verbose': 0,
+                'lb_type': 'elb',
+                'name': 'my_lb_name',
+                'command': [],
+                'syslog': False,
+                'cache': False,
+            },
+        ),
+        (
+            ['elb'],
+            {
+                'version': False,
+                'help': False,
+                'output': False,
+                'verbose': 0,
+                'lb_type': 'elb',
+                'name': None,
+                'command': [],
+                'syslog': False,
+                'cache': False,
+            },
+        ),
+        (
+            ['elb', '-v'],
+            {
+                'version': False,
+                'help': False,
+                'output': False,
+                'verbose': 0,
+                'lb_type': 'elb',
+                'name': None,
+                'command': [],
+                'syslog': False,
+                'cache': False,
+            },
+        ),
+        (
+            ['elb', 'my_lb_name', '-v'],
+            {
+                'version': False,
+                'help': False,
+                'output': False,
+                'verbose': 0,
+                'lb_type': 'elb',
+                'name': 'my_lb_name',
+                'command': [],
+                'syslog': False,
+                'cache': False,
+            },
+        ),
+        (
+            ['-v', '-v', '-s', 'elb', 'my_lb_name', 'test', '-v'],
+            {
+                'version': False,
+                'help': False,
+                'output': False,
+                'verbose': 2,
+                'lb_type': 'elb',
+                'name': 'my_lb_name',
+                'command': ['test', '-v'],
+                'syslog': True,
+                'cache': False,
+            },
+        ),
+        (
+            ['-o', '-s', 'elb', 'my_lb_name', 'test', '-v'],
+            {
+                'version': False,
+                'help': False,
+                'output': True,
+                'verbose': 0,
+                'lb_type': 'elb',
+                'name': 'my_lb_name',
+                'command': ['test', '-v'],
+                'syslog': True,
+                'cache': False,
+            },
+        ),
+    ],
+)
 def test_opt_arg_parser(arg_list, args):
     print(arg_list)
     optarg = main.Optarg(arg_list)
@@ -395,13 +408,10 @@ def test_command_elb_name_a_command_arguments(monkeypatch):
     arguments.
     '''
     monkeypatch.setattr(
-        'sys.argv',
-        ['clustercron', 'elb', 'name', 'a_command']
+        'sys.argv', ['clustercron', 'elb', 'name', 'a_command']
     )
     monkeypatch.setattr(
-        main,
-        'clustercron',
-        lambda lb_type, name, commmand, output, cache: 0
+        main, 'clustercron', lambda lb_type, name, commmand, output, cache: 0
     )
     assert main.command() == 0
 
@@ -423,8 +433,7 @@ def test_command_nosense(monkeypatch):
         (0, True, logging.ERROR),
         (1, True, logging.INFO),
         (2, True, logging.DEBUG),
-
-    ]
+    ],
 )
 def test_setup_logging_level(verbose, syslog, log_level):
     main.setup_logging(verbose, syslog)

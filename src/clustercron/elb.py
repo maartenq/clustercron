@@ -12,12 +12,11 @@ Modules holds class for AWS ElasticLoadBalancing (ELB)
 from __future__ import unicode_literals
 
 import logging
-import boto3
 
+import boto3
 from botocore.exceptions import NoRegionError
 
 from .lb import Lb
-
 
 logger = logging.getLogger(__name__)
 
@@ -34,9 +33,9 @@ class Elb(Lb):
                 return inst_health
             else:
                 client = boto3.client(
-                            'elb',
-                            region_name=self.region_name,
-                        )
+                    'elb',
+                    region_name=self.region_name,
+                )
         try:
             inst_health = client.describe_instance_health(
                 LoadBalancerName=self.name,
@@ -51,16 +50,14 @@ class Elb(Lb):
         logger.debug('Instance health states: %s', inst_health)
         try:
             healty_instances = sorted(
-                    [
-                        x['InstanceId'] for x
-                        in inst_health['InstanceStates']
-                        if x['State'] == 'InService'
-                    ]
+                [
+                    x['InstanceId']
+                    for x in inst_health['InstanceStates']
+                    if x['State'] == 'InService'
+                ]
             )
         except Exception as error:
             logger.error('Could not parse healty_instances: %s', error)
         else:
-            logger.info(
-                'Healty instances: %s', ', '.join(healty_instances)
-            )
+            logger.info('Healty instances: %s', ', '.join(healty_instances))
         return healty_instances

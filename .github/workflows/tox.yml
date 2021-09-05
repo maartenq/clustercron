@@ -1,0 +1,35 @@
+---
+# .github/workflows/tox.yml
+
+name: tox
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+      - devel
+
+jobs:
+  tox:
+    strategy:
+      matrix:
+        python-version:
+          - "2.7"
+          - "3.6"
+          - "3.7"
+          - "3.8"
+          - "3.9"
+        os:
+          - ubuntu-latest
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install tox
+        run: python -m pip install --upgrade tox virtualenv setuptools pip wheel
+      - name: Run tox
+        run: tox -e py
