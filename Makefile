@@ -57,7 +57,7 @@ lint: ## Check style with flake8.
 
 .PHONY: test
 test: ## Run tests quickly with the default Python.
-	py.test
+	pytest
 
 .PHONY: test-all
 test-all: ## Run tests on every Python version with tox.
@@ -65,7 +65,8 @@ test-all: ## Run tests on every Python version with tox.
 
 .PHONY: coverage
 coverage: ## Check code coverage quickly with the default Python.
-	coverage run --source clustercron py.test
+	coverage erase
+	coverage run --source clustercron -m pytest
 	coverage report -m
 	coverage html
 	$(BROWSER) htmlcov/index.html
