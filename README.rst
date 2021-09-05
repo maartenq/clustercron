@@ -5,8 +5,9 @@ Clustercron
 .. image:: https://img.shields.io/pypi/v/clustercron.svg
         :target: https://pypi.python.org/pypi/clustercron
 
-.. image:: https://results.pre-commit.ci/badge/github/pre-commit/action/master.svg
+.. image:: https://results.pre-commit.ci/badge/github/maartenq/clustercron/master.svg
         :target: https://results.pre-commit.ci/latest/github/maartenq/clustercron/master
+        :alt: pre-commit.ci status
 
 .. image:: https://readthedocs.org/projects/clustercron/badge/?version=latest
         :target: https://clustercron.readthedocs.io/en/latest/?badge=latest
