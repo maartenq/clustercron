@@ -75,7 +75,7 @@ coverage: ## Check code coverage quickly with the default Python.
 docs: ## Generate Sphinx HTML documentation, including API docs.
 	rm -f docs/clustercron.rst
 	rm -f docs/modules.rst
-	sphinx-apidoc -o docs/ clustercron
+	sphinx-apidoc -o docs/ src/clustercron
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
 	$(BROWSER) docs/_build/html/index.html
@@ -85,10 +85,10 @@ servedocs: docs ## Compile the docs watching for changes.
 	watchmedo shell-command -p '*.rst' -c '$(MAKE) -C docs html' -R -D .
 
 .PHONY: release
-release: clean docs ## Package and upload a release.
+release: clean test build ## Package and upload a release.
 	twine upload dist/*
 
 .PHONY: build
-build: clean ## Builds source and wheel package.
+build: clean-build ## Builds source and wheel package.
 	python -m build
 	ls -l dist

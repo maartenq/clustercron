@@ -4,6 +4,11 @@
 History
 =======
 
+0.6.4 (2021-09-05)
+------------------
+* Updated deployment env.
+
+
 0.6.3 (2021-09-03)
 ------------------
 * Updated requirements

@@ -2,16 +2,7 @@
 Clustercron
 ===========
 
-.. image:: https://img.shields.io/pypi/v/clustercron.svg
-        :target: https://pypi.python.org/pypi/clustercron
-
-.. image:: https://results.pre-commit.ci/badge/github/pre-commit/action/master.svg
-        :target: https://results.pre-commit.ci/latest/github/maartenq/clustercron/master
-
-.. image:: https://readthedocs.org/projects/clustercron/badge/?version=latest
-        :target: https://clustercron.readthedocs.io/en/latest/?badge=latest
-        :alt: Documentation Status
-
+|pypi| |docs| |pre-commit|
 
 **Clustercron** is cronjob wrapper that tries to ensure that a script gets run
 only once, on one host from a pool of nodes of a specified loadbalancer.
@@ -28,3 +19,16 @@ Supported load balancers (till now):
 
     * AWS Elastic Load Balancing (ELB)
     * AWS Elastic Load Balancing v2 (ALB)
+
+
+.. |pypi| image:: https://img.shields.io/pypi/v/clustercron.svg
+    :alt: Pypi
+    :target: https://pypi.python.org/pypi/clustercron
+
+.. |docs| image:: https://readthedocs.org/projects/clustercron/badge/?version=latest
+    :alt: Documentation Status
+    :target: https://docs.readthedocs.io/en/latest/?badge=latest
+
+.. |pre-commit| image:: https://results.pre-commit.ci/badge/github/maartenq/clustercron/master.svg
+    :alt: pre-commit.ci status
+    :target: https://results.pre-commit.ci/latest/github/maartenq/clustercron/master
