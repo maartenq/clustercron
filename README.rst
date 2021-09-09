@@ -29,9 +29,9 @@ Supported load balancers (till now):
     :alt: Documentation Status
     :target: https://clustercron.readthedocs.io/en/latest/
 
-.. |pre-commit| image:: https://results.pre-commit.ci/badge/github/maartenq/clustercron/master.svg
+.. |pre-commit| image:: https://results.pre-commit.ci/badge/github/maartenq/clustercron/main.svg
     :alt: pre-commit.ci status
-    :target: https://results.pre-commit.ci/latest/github/maartenq/clustercron/master
+    :target: https://results.pre-commit.ci/latest/github/maartenq/clustercron/main
 
 .. |workflow-ci| image:: https://github.com/maartenq/clustercron/workflows/ci/badge.svg?branch=main
     :alt: CI status
