@@ -32,7 +32,7 @@ Supported load balancers (till now):
 .. |pre-commit| image:: https://results.pre-commit.ci/badge/github/maartenq/clustercron/master.svg
     :alt: pre-commit.ci status
     :target: https://results.pre-commit.ci/latest/github/maartenq/clustercron/master
-    
+
 .. |workflow-tox| image:: https://github.com/maartenq/clustercron/workflows/tox/badge.svg?branch=master
     :alt: Tox status
     :target: https://github.com/maartenq/clustercron/actions?workflow=tox
