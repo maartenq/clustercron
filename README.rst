@@ -33,6 +33,6 @@ Supported load balancers (till now):
     :alt: pre-commit.ci status
     :target: https://results.pre-commit.ci/latest/github/maartenq/clustercron/master
 
-.. |workflow-ci| image:: https://github.com/maartenq/clustercron/workflows/ci/badge.svg?branch=master
+.. |workflow-ci| image:: https://github.com/maartenq/clustercron/workflows/ci/badge.svg?branch=main
     :alt: CI status
     :target: https://github.com/maartenq/clustercron/actions?workflow=ci
