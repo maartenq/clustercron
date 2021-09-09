@@ -53,7 +53,7 @@ clean-test: ## Remove test and coverage artifacts.
 
 .PHONY: lint
 lint: ## Check style with flake8.
-	flake8 clustercron tests
+	tox -e lint
 
 .PHONY: test
 test: ## Run tests quickly with the default Python.
