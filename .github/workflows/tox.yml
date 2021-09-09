@@ -4,14 +4,19 @@
 name: tox
 
 on:
-  pull_request:
   push:
-    branches:
-      - master
-      - devel
-
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+  workflow_dispatch:
+  
 jobs:
-  tox:
+  tests:
+    name: "Python ${{ matrix.python-version }}"
+    runs-on: "ubuntu-latest"
+    env:
+      USING_COVERAGE: '3.6,3.8'
+
     strategy:
       matrix:
         python-version:
@@ -20,16 +25,18 @@ jobs:
           - "3.7"
           - "3.8"
           - "3.9"
-        os:
-          - ubuntu-latest
-
-    runs-on: ${{ matrix.os }}
+    
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install tox
-        run: python -m pip install --upgrade tox virtualenv setuptools pip wheel
-      - name: Run tox
-        run: tox -e py
+      - name: Install dependencies
+        run: |
+          set -xe
+          python -VV
+          python -m site
+          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install --upgrade coverage[toml] virtualenv tox tox-gh-actions          
+      - name: Run tox targets for ${{ matrix.python-version }}
+        run: python -m tox
