@@ -4,8 +4,15 @@
 History
 =======
 
+0.6.11 (2021-09-09)
+------------------
+
+*  More test, deploy and build update , still no code change B)
+
+
 0.6.4 (2021-09-05)
 ------------------
+
 * Updated deployment env.
 
 
