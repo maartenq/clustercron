@@ -29,7 +29,7 @@ help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
 .PHONY: clean
-clean: clean-build clean-pyc clean-test ## Remove all build, test, coverage and Python artifacts
+clean: clean-build clean-pyc clean-test clean-docs ## Remove all build, test, coverage, docs and Python artifacts
 
 .PHONY: clean-build
 clean-build: ## Remove build artifacts.
@@ -50,6 +50,10 @@ clean-test: ## Remove test and coverage artifacts.
 	rm -fr .tox/
 	rm -f .coverage
 	rm -fr htmlcov/
+
+.PHONY: clean-docs
+clean-docs: ## Remove files in docs/_build
+	$(MAKE) -C docs clean
 
 .PHONY: lint
 lint: ## Check style with flake8.
@@ -72,11 +76,10 @@ coverage: ## Check code coverage quickly with the default Python.
 	$(BROWSER) htmlcov/index.html
 
 .PHONY: docs
-docs: ## Generate Sphinx HTML documentation, including API docs.
+docs: clean-docs ## Generate Sphinx HTML documentation, including API docs.
 	rm -f docs/clustercron.rst
 	rm -f docs/modules.rst
 	sphinx-apidoc -o docs/ src/clustercron
-	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
 	$(BROWSER) docs/_build/html/index.html
 

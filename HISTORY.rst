@@ -4,6 +4,12 @@
 History
 =======
 
+0.6.12 (2021-09-10)
+-------------------
+
+*  Fix some shit from migrating master -> main
+*  Makefile updates
+
 0.6.11 (2021-09-09)
 -------------------
 
