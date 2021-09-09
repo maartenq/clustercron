@@ -1,13 +1,13 @@
 ---
-# .github/workflows/tox.yml
+# .github/workflows/ci.yml
 
-name: tox
+name: ci
 
 on:
   push:
-    branches: ["master"]
+    branches: ["main"]
   pull_request:
-    branches: ["master"]
+    branches: ["main"]
   workflow_dispatch:
 
 jobs:

@@ -2,7 +2,7 @@
 Clustercron
 ===========
 
-|pypi| |docs| |pre-commit| |workflow-tox|
+|pypi| |docs| |pre-commit| |workflow-ci|
 
 **Clustercron** is cronjob wrapper that tries to ensure that a script gets run
 only once, on one host from a pool of nodes of a specified loadbalancer.
@@ -33,6 +33,6 @@ Supported load balancers (till now):
     :alt: pre-commit.ci status
     :target: https://results.pre-commit.ci/latest/github/maartenq/clustercron/master
 
-.. |workflow-tox| image:: https://github.com/maartenq/clustercron/workflows/tox/badge.svg?branch=master
-    :alt: Tox status
-    :target: https://github.com/maartenq/clustercron/actions?workflow=tox
+.. |workflow-ci| image:: https://github.com/maartenq/clustercron/workflows/ci/badge.svg?branch=master
+    :alt: CI status
+    :target: https://github.com/maartenq/clustercron/actions?workflow=ci
