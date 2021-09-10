@@ -94,4 +94,4 @@ release: clean test build ## Package and upload a release.
 .PHONY: build
 build: clean-build ## Builds source and wheel package.
 	python -m build
-	ls -l dist
+	python -m twine check --strict dist/*
