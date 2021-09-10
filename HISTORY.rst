@@ -4,6 +4,12 @@
 History
 =======
 
+0.6.13 (2021-09-10)
+-------------------
+
+* More dev env stuff: removed requirements files, all deps in `setup.cfg` now.
+
+
 0.6.12 (2021-09-10)
 -------------------
 
