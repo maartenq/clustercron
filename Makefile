@@ -57,7 +57,7 @@ clean-docs: ## Remove files in docs/_build
 
 .PHONY: lint
 lint: ## Check style with flake8.
-	tox -e lint
+	pre-commit run --all-files --show-diff-on-failure
 
 .PHONY: test
 test: ## Run tests quickly with the default Python.
