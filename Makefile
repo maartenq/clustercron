@@ -33,8 +33,9 @@ clean: clean-build clean-pyc clean-test clean-docs ## Remove all build, test, co
 
 .PHONY: clean-build
 clean-build: ## Remove build artifacts.
-	rm -fr dist/
-	rm -fr .eggs/
+	rm -rf build/
+	rm -rf dist/
+	rm -rf .eggs/
 	find . -name '*.egg-info' -exec rm -fr {} +
 	find . -name '*.egg' -exec rm -f {} +
 
@@ -56,7 +57,7 @@ clean-docs: ## Remove files in docs/_build
 	$(MAKE) -C docs clean
 
 .PHONY: lint
-lint: ## Check style with flake8.
+lint: ## Run all pre-commit hooks on all files
 	pre-commit run --all-files --show-diff-on-failure
 
 .PHONY: test
@@ -83,15 +84,16 @@ docs: clean-docs ## Generate Sphinx HTML documentation, including API docs.
 	$(MAKE) -C docs html
 	$(BROWSER) docs/_build/html/index.html
 
-.PHONY: servedocs
-servedocs: docs ## Compile the docs watching for changes.
-	watchmedo shell-command -p '*.rst' -c '$(MAKE) -C docs html' -R -D .
-
 .PHONY: release
-release: clean test build ## Package and upload a release.
+release: clean tox build ## Package and upload a release.
 	twine upload dist/*
 
 .PHONY: build
 build: clean-build ## Builds source and wheel package.
 	python -m build
 	python -m twine check --strict dist/*
+
+.PHONY: devenv
+devenv: ## Install package development mode + dependencies.
+	pip install -U pip wheel setuptools
+	pip install -e .[dev]
