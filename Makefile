@@ -31,7 +31,8 @@ help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
 .PHONY: clean
-clean: clean-build clean-pyc clean-test clean-docs ## Remove all build, test, coverage, docs and Python artifacts
+clean: ## Remove untracked files from the working tree (using `git clean`)
+	git clean --force -x -d
 
 .PHONY: clean-build
 clean-build: ## Remove build artifacts.
@@ -74,7 +75,7 @@ tox: ## Run tests on every Python version with tox.
 	tox
 
 .PHONY: coverage
-coverage: ## Check code coverage quickly with the default Python.
+coverage: clean-test ## Check code coverage quickly with the default Python.
 	coverage erase
 	coverage run --source $(PACKAGE) -m pytest
 	coverage report -m
@@ -89,12 +90,12 @@ docs: clean-docs ## Generate Sphinx HTML documentation, including API docs.
 	$(MAKE) -C docs html
 	$(BROWSER) docs/_build/html/index.html
 
-.PHONY: release
-release: clean tox build ## Package and upload a release.
+.PHONY: upload
+upload: ## Upload package to Python Package Index (PyPI).
 	twine upload dist/*
 
 .PHONY: build
-build: clean-build ## Builds source and wheel package.
+build: clean ## Builds source and wheel package.
 	python -m build
 	python -m twine check --strict dist/*
 
@@ -102,3 +103,6 @@ build: clean-build ## Builds source and wheel package.
 devenv: ## Install package development mode + dependencies.
 	pip install -U pip wheel setuptools
 	pip install -e ".[dev]"
+
+.PHONY: release
+release: clean tox build upload ## Release package: test, build and upload to PyPI.
