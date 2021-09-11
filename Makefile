@@ -24,6 +24,8 @@ endef
 export PRINT_HELP_PYSCRIPT
 BROWSER := python -c "$$BROWSER_PYSCRIPT"
 
+PACKAGE = clustercron
+
 .PHONY: help
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
@@ -36,7 +38,7 @@ clean-build: ## Remove build artifacts.
 	rm -rf build/
 	rm -rf dist/
 	rm -rf .eggs/
-	find . -name '*.egg-info' -exec rm -fr {} +
+	find . -name '*.egg-info' -exec rm -rf {} +
 	find . -name '*.egg' -exec rm -f {} +
 
 .PHONY: clean-pyc
@@ -44,13 +46,16 @@ clean-pyc: ## Remove Python file artifacts.
 	find . -name '*.pyc' -exec rm -f {} +
 	find . -name '*.pyo' -exec rm -f {} +
 	find . -name '*~' -exec rm -f {} +
-	find . -name '__pycache__' -exec rm -fr {} +
+	find . -name '__pycache__' -exec rm -rf {} +
 
 .PHONY: clean-test
 clean-test: ## Remove test and coverage artifacts.
-	rm -fr .tox/
 	rm -f .coverage
-	rm -fr htmlcov/
+	rm -f coverage.xml
+	rm -rf .pytest_cache
+	rm -rf .tox/
+	rm -f .coverage
+	rm -rf htmlcov/
 
 .PHONY: clean-docs
 clean-docs: ## Remove files in docs/_build
@@ -62,7 +67,7 @@ lint: ## Run all pre-commit hooks on all files
 
 .PHONY: test
 test: ## Run tests quickly with the default Python.
-	pytest --cov=clustercron
+	pytest --cov=$(PACKAGE)
 
 .PHONY: tox
 tox: ## Run tests on every Python version with tox.
@@ -71,16 +76,16 @@ tox: ## Run tests on every Python version with tox.
 .PHONY: coverage
 coverage: ## Check code coverage quickly with the default Python.
 	coverage erase
-	coverage run --source clustercron -m pytest
+	coverage run --source $(PACKAGE) -m pytest
 	coverage report -m
 	coverage html
 	$(BROWSER) htmlcov/index.html
 
 .PHONY: docs
 docs: clean-docs ## Generate Sphinx HTML documentation, including API docs.
-	rm -f docs/clustercron.rst
+	rm -f docs/$(PACKAGE).rst
 	rm -f docs/modules.rst
-	sphinx-apidoc -o docs/ src/clustercron
+	sphinx-apidoc -o docs/ src/$(PACKAGE)
 	$(MAKE) -C docs html
 	$(BROWSER) docs/_build/html/index.html
 
@@ -96,4 +101,4 @@ build: clean-build ## Builds source and wheel package.
 .PHONY: devenv
 devenv: ## Install package development mode + dependencies.
 	pip install -U pip wheel setuptools
-	pip install -e .[dev]
+	pip install -e ".[dev]"
