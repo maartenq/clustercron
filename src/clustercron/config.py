@@ -12,19 +12,19 @@ except ImportError:
     import configparser
 
 _config = {
-    'cache': {
-        'filename': '/tmp/clustercron_cache.json',
-        'expire_time': 59,
-        'max_iter': 20,
+    "cache": {
+        "filename": "/tmp/clustercron_cache.json",
+        "expire_time": 59,
+        "max_iter": 20,
     }
 }
 
 
 def _update_config_from_conf():
-    basename = 'clustercron.ini'
+    basename = "clustercron.ini"
     filenames = (
-        os.path.join('/etc/', basename),
-        os.path.join(os.path.expanduser("~"), '.' + basename),
+        os.path.join("/etc/", basename),
+        os.path.join(os.path.expanduser("~"), "." + basename),
     )
     parser = configparser.ConfigParser()
     for filename in filenames:
