@@ -68,7 +68,7 @@ lint: ## Run all pre-commit hooks on all files
 
 .PHONY: test
 test: ## Run tests quickly with the default Python.
-	pytest --cov=$(PACKAGE)
+	python -m pytest --cov=$(PACKAGE)
 
 .PHONY: tox
 tox: ## Run tests on every Python version with tox.
@@ -76,10 +76,10 @@ tox: ## Run tests on every Python version with tox.
 
 .PHONY: coverage
 coverage: clean-test ## Check code coverage quickly with the default Python.
-	coverage erase
-	coverage run --source $(PACKAGE) -m pytest
-	coverage report -m
-	coverage html
+	python -m coverage erase
+	python -m coverage run --source $(PACKAGE) -m pytest
+	python -m coverage report -m
+	python -m coverage html
 	$(BROWSER) htmlcov/index.html
 
 .PHONY: docs
@@ -92,7 +92,7 @@ docs: clean-docs ## Generate Sphinx HTML documentation, including API docs.
 
 .PHONY: upload
 upload: ## Upload package to Python Package Index (PyPI).
-	twine upload dist/*
+	 python -m twine upload dist/*
 
 .PHONY: build
 build: clean ## Builds source and wheel package.
@@ -101,8 +101,8 @@ build: clean ## Builds source and wheel package.
 
 .PHONY: devenv
 devenv: ## Install package development mode + dependencies.
-	pip install -U pip wheel setuptools
-	pip install -e ".[dev]"
+	python -m pip install -U pip wheel setuptools
+	python -m pip install -e ".[dev]"
 
 .PHONY: release
 release: clean tox build upload ## Release package: test, build and upload to PyPI.
