@@ -80,5 +80,5 @@ jobs:
       - name: Install dev deps in dev mode.
         run: python -m pip install -e '.[dev]'
 
-      - name: Import package and print version.
-        run: python -c 'import clustercron; print(clustercron.__version__)'
+      - name: Import package
+        run: python -c 'import clustercron'
