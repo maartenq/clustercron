@@ -17,7 +17,8 @@ import stat
 import subprocess
 import sys
 
-from . import __version__, cache, config
+from . import cache, config
+from .version import get_version
 
 # general libary logging
 logger = logging.getLogger(__name__)
@@ -194,7 +195,7 @@ def command():
     optarg = Optarg(sys.argv[1:])
     optarg.parse()
     if optarg.args['version']:
-        print(__version__)
+        print(get_version())
         exitcode = 2
     elif optarg.args['lb_type'] and optarg.args['name']:
         setup_logging(optarg.args['verbose'], optarg.args['syslog'])
