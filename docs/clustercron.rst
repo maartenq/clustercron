@@ -52,6 +52,14 @@ clustercron.main module
    :undoc-members:
    :show-inheritance:
 
+clustercron.version module
+--------------------------
+
+.. automodule:: clustercron.version
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

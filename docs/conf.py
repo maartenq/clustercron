@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
+from clustercron.version import get_version
 
 #
 # Configuration file for the Sphinx documentation builder.
@@ -23,14 +23,14 @@ from __future__ import unicode_literals
 # -- Project information -----------------------------------------------------
 
 project = "Clustercron"
-copyright = "2019, Maarten"
+copyright = "2021, Maarten"
 author = "Maarten"
 
-# The short X.Y version
-version = "0.5"
 # The full version, including alpha/beta/rc tags
-release = "0.5.4"
+release = get_version()
 
+# The short X.Y version
+version = ".".join(release.split(".")[:2])
 
 # -- General configuration ---------------------------------------------------
 
