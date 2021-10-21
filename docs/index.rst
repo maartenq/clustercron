@@ -15,8 +15,6 @@ Contents:
    configuration
    usage
    modules
-   contributing
-   authors
    history
 
 
