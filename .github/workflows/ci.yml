@@ -81,4 +81,4 @@ jobs:
         run: python -m pip install -e '.[dev]'
 
       - name: Import package
-        run: python -c 'import clustercron'
+        run: python -c 'from clustercron.version import get_version; print(get_version())'
