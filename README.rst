@@ -27,7 +27,7 @@ Supported load balancers (till now):
 
 .. |docs| image:: https://readthedocs.org/projects/clustercron/badge/?version=latest
     :alt: Documentation Status
-    :target: https://clustercron.readthedocs.io/en/latest/
+    :target: https://clustercron.readthedocs.io/en/latest/?badge=latest
 
 .. |pre-commit| image:: https://results.pre-commit.ci/badge/github/maartenq/clustercron/main.svg
     :alt: pre-commit.ci status
