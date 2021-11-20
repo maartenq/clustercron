@@ -59,7 +59,7 @@ jobs:
           fail_ci_if_error: True
           verbose: True
 
-  install-dev:
+  test-dev-env-installation:
     strategy:
       matrix:
         os:
@@ -67,7 +67,7 @@ jobs:
           - windows-latest
           - macos-latest
 
-    name: Verify dev env
+    name: Verify dev env install on
     runs-on: ${{ matrix.os }}
 
     steps:
