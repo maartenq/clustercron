@@ -5,7 +5,7 @@ default_language_version:
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.0.1
+    rev: v4.1.0
     hooks:
       - id: check-added-large-files
       - id: end-of-file-fixer
@@ -44,6 +44,6 @@ repos:
       - id: setup-cfg-fmt
 
   - repo: https://github.com/tox-dev/tox-ini-fmt
-    rev: 0.5.1
+    rev: 0.5.2
     hooks:
       - id: tox-ini-fmt
